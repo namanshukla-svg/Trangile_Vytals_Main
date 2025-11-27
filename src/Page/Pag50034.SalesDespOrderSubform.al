@@ -11,7 +11,7 @@ Page 50034 "Sales Desp. Order Subform"
     MultipleNewLines = true;
     PageType = ListPart;
     SourceTable = "Sales Line";
-    SourceTableView = sorting("Document Type", "Document No.", "Line No.")order(descending)where("Document Type"=filter(Order));
+    SourceTableView = sorting("Document Type", "Document No.", "Line No.") order(descending) where("Document Type" = filter(Order));
     ApplicationArea = All;
 
     layout
@@ -98,10 +98,10 @@ Page 50034 "Sales Desp. Order Subform"
                     trigger OnValidate()
                     begin
                         //CF001 St
-                        if((Rec."No of Pack") * (Rec."Qty Per Pack")) > Rec."Total Schedule Quantity" then Error(Text001);
+                        if ((Rec."No of Pack") * (Rec."Qty Per Pack")) > Rec."Total Schedule Quantity" then Error(Text001);
                         Rec.Validate(Quantity, ((Rec."No of Pack") * (Rec."Qty Per Pack")));
                         Rec.InitQtyToShip;
-                    //CF001 En
+                        //CF001 En
                     end;
                 }
                 field(Quantity; Rec.Quantity)
@@ -111,7 +111,8 @@ Page 50034 "Sales Desp. Order Subform"
                     Caption = 'Total Quantity';
                     Editable = false;
 
-                    trigger OnLookup(var Text: Text): Boolean var
+                    trigger OnLookup(var Text: Text): Boolean
+                    var
                         SalesScheduleBufferLocal: Record "SSD Sales Schedule Buffer";
                         SalesPacketDetailsForm: Page "Sales Packet Details";
                     begin
@@ -127,12 +128,13 @@ Page 50034 "Sales Desp. Order Subform"
                             Clear(SalesPacketDetailsForm);
                             SalesPacketDetailsForm.SetRecord(SalesScheduleBufferLocal);
                             SalesPacketDetailsForm.SetTableview(SalesScheduleBufferLocal);
-                            SalesPacketDetailsForm.LookupMode:=true;
-                            SalesPacketDetailsForm.Editable:=false;
+                            SalesPacketDetailsForm.LookupMode := true;
+                            SalesPacketDetailsForm.Editable := false;
                             SalesPacketDetailsForm.RunModal;
                         end;
-                    //CF002 En
+                        //CF002 En
                     end;
+
                     trigger OnValidate()
                     begin
                         if Rec.Quantity > Rec."Total Schedule Quantity" then Error(Text001);
@@ -147,7 +149,7 @@ Page 50034 "Sales Desp. Order Subform"
                             ItemPhyBinDetails.SetRange("Posted Document No.", '');
                             if ItemPhyBinDetails.FindSet then ItemPhyBinDetails.DeleteAll;
                         end;
-                    //CORP::PK 181019 <<<
+                        //CORP::PK 181019 <<<
                     end;
                 }
                 field("Actual Wt"; Rec."Actual Wt")
@@ -348,16 +350,16 @@ Page 50034 "Sales Desp. Order Subform"
                     begin
                         //CORP::PK 050719 >>>
                         if Rec.Type <> Rec.Type::" " then begin
-                            if Location.Get(Rec."Location Code")then;
-                            if Item.Get(Rec."No.")then;
-                            if(Location."Phy. Bin Required") and (Item."Phy. Bin Required")then begin
-                                LotNo:='';
+                            if Location.Get(Rec."Location Code") then;
+                            if Item.Get(Rec."No.") then;
+                            if (Location."Phy. Bin Required") and (Item."Phy. Bin Required") then begin
+                                LotNo := '';
                                 ReservationEntry.Reset;
                                 ReservationEntry.SetRange("Source ID", Rec."Document No.");
                                 ReservationEntry.SetRange("Source Ref. No.", Rec."Line No.");
                                 ReservationEntry.SetRange("Item No.", Rec."No.");
                                 ReservationEntry.SetRange("Item Ledger Entry No.", 0);
-                                if ReservationEntry.FindFirst then LotNo:=ReservationEntry."Lot No.";
+                                if ReservationEntry.FindFirst then LotNo := ReservationEntry."Lot No.";
                                 ItemPhyBinDetails.Reset;
                                 ItemPhyBinDetails.SetRange("Document No.", Rec."Document No.");
                                 ItemPhyBinDetails.SetRange("Document Line No.", Rec."Line No.");
@@ -368,11 +370,14 @@ Page 50034 "Sales Desp. Order Subform"
                                     ReservationEntry.SetRange("Source Ref. No.", Rec."Line No.");
                                     ReservationEntry.SetRange("Item No.", Rec."No.");
                                     ReservationEntry.SetRange("Item Ledger Entry No.", 0);
-                                    if ReservationEntry.FindSet then repeat ItemPhyBinDetails.Reset;
+                                    if ReservationEntry.FindSet then
+                                        repeat
+                                            ItemPhyBinDetails.Reset;
                                             ItemPhyBinDetails.SetRange("Document No.", Rec."Document No.");
-                                            if ItemPhyBinDetails.FindLast then LineNo:=ItemPhyBinDetails."Line No." + 10000
+                                            if ItemPhyBinDetails.FindLast then
+                                                LineNo := ItemPhyBinDetails."Line No." + 10000
                                             else
-                                                LineNo:=10000;
+                                                LineNo := 10000;
                                             ItemPhyBinDetails.Init;
                                             ItemPhyBinDetails.Validate("Line No.", LineNo);
                                             ItemPhyBinDetails.Validate("Document No.", Rec."Document No.");
@@ -397,7 +402,7 @@ Page 50034 "Sales Desp. Order Subform"
                                 Page.RunModal(50238, ItemPhyBinDetails);
                             end;
                         end;
-                    //CORP::PK 050719 <<<
+                        //CORP::PK 050719 <<<
                     end;
                 }
                 action("Packet Details")
@@ -412,7 +417,7 @@ Page 50034 "Sales Desp. Order Subform"
                         //This functionality was copied from page #50033. Unsupported part was commented. Please check it.
                         /*CurrPage.SalesLines.PAGE.*/
                         PacketQuantity;
-                    //CF001 En
+                        //CF001 En
                     end;
                 }
             }
@@ -588,7 +593,9 @@ Page 50034 "Sales Desp. Order Subform"
     begin
         Rec.ShowShortcutDimCode(ShortcutDimCode);
     end;
-    trigger OnDeleteRecord(): Boolean begin
+
+    trigger OnDeleteRecord(): Boolean
+    begin
         CheckOrderStatus(Rec);
         //CORP::PK 181019 >>>
         ItemPhyBinDetails.Reset;
@@ -597,39 +604,48 @@ Page 50034 "Sales Desp. Order Subform"
         ItemPhyBinDetails.SetRange("Document Line No.", Rec."Line No.");
         ItemPhyBinDetails.SetRange("Posted Document No.", '');
         if ItemPhyBinDetails.FindSet then ItemPhyBinDetails.DeleteAll;
-    //CORP::PK 181019 <<<
+        //CORP::PK 181019 <<<
     end;
-    trigger OnModifyRecord(): Boolean begin
+
+    trigger OnModifyRecord(): Boolean
+    begin
         CheckOrderStatus(Rec);
     end;
+
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
-        Rec.Type:=Rec.Type::Item;
+        Rec.Type := Rec.Type::Item;
         Clear(ShortcutDimCode);
     end;
-    var SalesHeader: Record "Sales Header";
-    SalesPriceCalcMgt: Codeunit "Sales Price Calc. Mgt.";
-    TransferExtendedText: Codeunit "Transfer Extended Text";
-    SalesInfoPaneMgt: Codeunit "Sales Info-Pane Management";
-    ShortcutDimCode: array[8]of Code[20];
-    ItemCheckAvail: Codeunit "Item-Check Avail.";
-    Text001: label 'Total Despatch Quantity cann''t be more than Total Order Quantity';
-    Text002: label 'Modification can''t be done\\ Already Invoice done in Despatch Slip No. %1,  Line No %2, Item No. %3 ';
-    Item: Record Item;
-    Location: Record Location;
-    ItemPhyBinDetails: Record "SSD Item Phy. Bin Details";
+
+    var
+        SalesHeader: Record "Sales Header";
+        SalesPriceCalcMgt: Codeunit "Sales Price Calc. Mgt.";
+        TransferExtendedText: Codeunit "Transfer Extended Text";
+        SalesInfoPaneMgt: Codeunit "Sales Info-Pane Management";
+        ShortcutDimCode: array[8] of Code[20];
+        ItemCheckAvail: Codeunit "Item-Check Avail.";
+        Text001: label 'Total Despatch Quantity cann''t be more than Total Order Quantity';
+        Text002: label 'Modification can''t be done\\ Already Invoice done in Despatch Slip No. %1,  Line No %2, Item No. %3 ';
+        Item: Record Item;
+        Location: Record Location;
+        ItemPhyBinDetails: Record "SSD Item Phy. Bin Details";
+
     procedure ApproveCalcInvDisc()
     begin
         Codeunit.Run(Codeunit::"Sales-Disc. (Yes/No)", Rec);
     end;
+
     procedure CalcInvDisc()
     begin
         Codeunit.Run(Codeunit::"Sales-Calc. Discount", Rec);
     end;
+
     procedure ExplodeBOM()
     begin
         Codeunit.Run(Codeunit::"Sales-Explode BOM", Rec);
     end;
+
     procedure OpenPurchOrderForm()
     var
         PurchHeader: Record "Purchase Header";
@@ -637,9 +653,10 @@ Page 50034 "Sales Desp. Order Subform"
     begin
         PurchHeader.SetRange("No.", Rec."Purchase Order No.");
         PurchOrder.SetTableview(PurchHeader);
-        PurchOrder.Editable:=false;
+        PurchOrder.Editable := false;
         PurchOrder.Run;
     end;
+
     procedure OpenSpecialPurchOrderForm()
     var
         PurchHeader: Record "Purchase Header";
@@ -647,62 +664,74 @@ Page 50034 "Sales Desp. Order Subform"
     begin
         PurchHeader.SetRange("No.", Rec."Special Order Purchase No.");
         PurchOrder.SetTableview(PurchHeader);
-        PurchOrder.Editable:=false;
+        PurchOrder.Editable := false;
         PurchOrder.Run;
     end;
+
     procedure _InsertExtendedText(Unconditionally: Boolean)
     begin
-        if TransferExtendedText.SalesCheckIfAnyExtText(Rec, Unconditionally)then begin
+        if TransferExtendedText.SalesCheckIfAnyExtText(Rec, Unconditionally) then begin
             CurrPage.SaveRecord;
             TransferExtendedText.InsertSalesExtText(Rec);
         end;
         if TransferExtendedText.MakeUpdate then UpdateForm(true);
     end;
+
     procedure InsertExtendedText(Unconditionally: Boolean)
     begin
-        if TransferExtendedText.SalesCheckIfAnyExtText(Rec, Unconditionally)then begin
+        if TransferExtendedText.SalesCheckIfAnyExtText(Rec, Unconditionally) then begin
             CurrPage.SaveRecord;
             TransferExtendedText.InsertSalesExtText(Rec);
         end;
         if TransferExtendedText.MakeUpdate then UpdateForm(true);
     end;
+
     procedure _ShowReservation()
     begin
         Rec.Find;
         Rec.ShowReservation;
     end;
-    procedure _ItemAvailability(AvailabilityType: Option Date, Variant, Location, Bin)
+
+    procedure _ItemAvailability(AvailabilityType: Option Date,Variant,Location,Bin)
     begin
-    //Rec.ItemAvailability(AvailabilityType); // BIS 1145
+        //Rec.ItemAvailability(AvailabilityType); // BIS 1145
     end;
-    procedure ItemAvailability(AvailabilityType: Option Date, Variant, Location, Bin)
+
+    procedure ItemAvailability(AvailabilityType: Option Date,Variant,Location,Bin)
     begin
-    //Rec.ItemAvailability(AvailabilityType); // BIS 1145
+        //Rec.ItemAvailability(AvailabilityType); // BIS 1145
     end;
+
     procedure _ShowReservationEntries()
     begin
         Rec.ShowReservationEntries(true);
     end;
+
     procedure ShowReservationEntries()
     begin
         Rec.ShowReservationEntries(true);
     end;
+
     procedure _ShowDimensions()
     begin
         Rec.ShowDimensions;
     end;
+
     procedure _ShowItemSub()
     begin
         Rec.ShowItemSub;
     end;
+
     procedure ShowNonstockItems()
     begin
         Rec.ShowNonstock;
     end;
+
     procedure _OpenItemTrackingLines()
     begin
         Rec.OpenItemTrackingLines;
     end;
+
     procedure ShowTracking()
     var
         TrackingForm: Page "Order Tracking";
@@ -710,26 +739,31 @@ Page 50034 "Sales Desp. Order Subform"
         TrackingForm.SetSalesLine(Rec);
         TrackingForm.RunModal;
     end;
+
     procedure ItemChargeAssgnt()
     begin
         Rec.ShowItemChargeAssgnt;
     end;
+
     procedure UpdateForm(SetSaveRecord: Boolean)
     begin
         CurrPage.Update(SetSaveRecord);
     end;
+
     procedure ShowPrices()
     begin
         SalesHeader.Get(Rec."Document Type", Rec."Document No.");
         Clear(SalesPriceCalcMgt);
         SalesPriceCalcMgt.GetSalesLinePrice(SalesHeader, Rec);
     end;
+
     procedure ShowLineDisc()
     begin
         SalesHeader.Get(Rec."Document Type", Rec."Document No.");
         Clear(SalesPriceCalcMgt);
         SalesPriceCalcMgt.GetSalesLineLineDisc(SalesHeader, Rec);
     end;
+
     procedure OrderPromisingLine()
     var
         OrderPromisingLine: Record "Order Promising Line" temporary;
@@ -739,6 +773,7 @@ Page 50034 "Sales Desp. Order Subform"
         OrderPromisingLine.SetRange("Source Line No.", Rec."Line No.");
         Page.RunModal(Page::"Order Promising Lines", OrderPromisingLine);
     end;
+
     procedure DeleteDespatchLines(var RecToSalesHeader: Record "Sales Header")
     var
         SalesLineLocal: Record "Sales Line";
@@ -749,7 +784,9 @@ Page 50034 "Sales Desp. Order Subform"
         SalesLineLocal.SetRange("Document Type", RecToSalesHeader."Document Type");
         SalesLineLocal.SetRange("Document No.", RecToSalesHeader."No.");
         SalesLineLocal.SetRange("Document Subtype", SalesLineLocal."document subtype"::Despatch);
-        if SalesLineLocal.FindSet then repeat SalesLineLocal.Delete;
+        if SalesLineLocal.FindSet then
+            repeat
+                SalesLineLocal.Delete;
                 SalesPacketBufferLocal.Reset;
                 SalesPacketBufferLocal.SetRange("Document Type", SalesLineLocal."Document Type");
                 SalesPacketBufferLocal.SetRange("Document No.", SalesLineLocal."Document No.");
@@ -758,8 +795,9 @@ Page 50034 "Sales Desp. Order Subform"
                 SalesPacketBufferLocal.SetRange("Order Line No.", SalesLineLocal."Line No.");
                 if SalesPacketBufferLocal.FindSet then SalesPacketBufferLocal.DeleteAll;
             until SalesLineLocal.Next = 0;
-    //CF001 En
+        //CF001 En
     end;
+
     procedure CopySalesDoc(FromDocType: Option; FromDocNo: Code[20]; var ToSalesHeader: Record "Sales Header")
     var
         ToSalesLine: Record "Sales Line";
@@ -773,52 +811,60 @@ Page 50034 "Sales Desp. Order Subform"
     begin
         //CF001 St
         TransferOldExtLines.ClearLineNumbers;
-        case FromDocType of SalesHeader."document type"::Order: begin
-            FromSalesHeader.Get(SalesHeaderDocType(FromDocType), FromDocNo);
-            if ToSalesHeader."Document Type" in[ToSalesHeader."document type"::Order]then begin
-                FromSalesLine.SetCurrentkey("Document Type", "Document No.", Type, "No.");
-                FromSalesLine.SetRange("Document Type", FromSalesHeader."Document Type");
-                FromSalesLine.SetRange("Document No.", FromSalesHeader."No.");
-                // FromSalesLine.SETRANGE(Type,FromSalesLine.Type::Item);
-                FromSalesLine.SetFilter("No.", '<>%1', '');
-                //Alle VPB FromSalesLine.SETFILTER("Shipment Date",'<=%1',ToSalesHeader."Order Date");
-                FromSalesLine.SetFilter("Qty. to Ship", '>%1', 0);
-                if FromSalesLine.FindSet then repeat if FromSalesLine."Qty. to Ship" > 0 then begin
-                            ToSalesLine."No.":=FromSalesLine."No.";
-                            ToSalesLine."Variant Code":=FromSalesLine."Variant Code";
-                            ToSalesLine."Location Code":=FromSalesLine."Location Code";
-                            ToSalesLine."Bin Code":=FromSalesLine."Bin Code";
-                            ToSalesLine."Unit of Measure Code":=FromSalesLine."Unit of Measure Code";
-                            ToSalesLine."Qty. per Unit of Measure":=FromSalesLine."Qty. per Unit of Measure";
-                            ToSalesLine."Outstanding Quantity":=FromSalesLine."Qty. to Ship";
-                            ToSalesLine."Drop Shipment":=FromSalesLine."Drop Shipment";
-                            CheckItemAvailable(ToSalesHeader, ToSalesLine);
-                            //vipin to get correct tax group code in case of spares
-                            ToSalesLine."Tax Group Code":=FromSalesLine."Tax Group Code";
-                            //vipin to get correct tax group code in case of spares end;
-                            ToSalesLine."Description 2":=FromSalesLine."Description 2";
-                        end;
-                    until FromSalesLine.Next = 0;
-            end;
-        end;
+        case FromDocType of
+            SalesHeader."document type"::Order:
+                begin
+                    FromSalesHeader.Get(SalesHeaderDocType(FromDocType), FromDocNo);
+                    if ToSalesHeader."Document Type" in [ToSalesHeader."document type"::Order] then begin
+                        FromSalesLine.SetCurrentkey("Document Type", "Document No.", Type, "No.");
+                        FromSalesLine.SetRange("Document Type", FromSalesHeader."Document Type");
+                        FromSalesLine.SetRange("Document No.", FromSalesHeader."No.");
+                        // FromSalesLine.SETRANGE(Type,FromSalesLine.Type::Item);
+                        FromSalesLine.SetFilter("No.", '<>%1', '');
+                        //Alle VPB FromSalesLine.SETFILTER("Shipment Date",'<=%1',ToSalesHeader."Order Date");
+                        FromSalesLine.SetFilter("Qty. to Ship", '>%1', 0);
+                        if FromSalesLine.FindSet then
+                            repeat
+                                if FromSalesLine."Qty. to Ship" > 0 then begin
+                                    ToSalesLine."No." := FromSalesLine."No.";
+                                    ToSalesLine."Variant Code" := FromSalesLine."Variant Code";
+                                    ToSalesLine."Location Code" := FromSalesLine."Location Code";
+                                    ToSalesLine."Bin Code" := FromSalesLine."Bin Code";
+                                    ToSalesLine."Unit of Measure Code" := FromSalesLine."Unit of Measure Code";
+                                    ToSalesLine."Qty. per Unit of Measure" := FromSalesLine."Qty. per Unit of Measure";
+                                    ToSalesLine."Outstanding Quantity" := FromSalesLine."Qty. to Ship";
+                                    ToSalesLine."Drop Shipment" := FromSalesLine."Drop Shipment";
+                                    CheckItemAvailable1(ToSalesHeader, ToSalesLine);
+                                    //vipin to get correct tax group code in case of spares
+                                    ToSalesLine."Tax Group Code" := FromSalesLine."Tax Group Code";
+                                    //vipin to get correct tax group code in case of spares end;
+                                    ToSalesLine."Description 2" := FromSalesLine."Description 2";
+                                end;
+                            until FromSalesLine.Next = 0;
+                    end;
+                end;
         end;
         //DocDim.LOCKTABLE; // BIS 1145
         ToSalesLine.LockTable;
-        if ToSalesLine.Find('+')then NextLineNo:=ToSalesLine."Line No."
+        if ToSalesLine.Find('+') then
+            NextLineNo := ToSalesLine."Line No."
         else
-            NextLineNo:=0;
+            NextLineNo := 0;
         if not ToSalesHeader.RECORDLEVELLOCKING then ToSalesHeader.LockTable(true, true);
-        LinesNotCopied:=0;
-        case FromDocType of SalesHeader."document type"::Order: begin
-            FromSalesLine.Reset;
-            FromSalesLine.SetCurrentkey("Document Type", "Document No.", Type, "No.");
-            FromSalesLine.SetRange("Document Type", FromSalesHeader."Document Type");
-            FromSalesLine.SetRange("Document No.", FromSalesHeader."No.");
-            // FromSalesLine.SETRANGE(Type,FromSalesLine.Type::Item);
-            FromSalesLine.SetFilter("No.", '<>%1', '');
-            //Alle VPB FromSalesLine.SETFILTER("Shipment Date",'<=%1',ToSalesHeader."Order Date");
-            FromSalesLine.SetFilter("Qty. to Ship", '>%1', 0);
-            if FromSalesLine.FindSet then repeat /* Alle VPB Commented this is not required feature
+        LinesNotCopied := 0;
+        case FromDocType of
+            SalesHeader."document type"::Order:
+                begin
+                    FromSalesLine.Reset;
+                    FromSalesLine.SetCurrentkey("Document Type", "Document No.", Type, "No.");
+                    FromSalesLine.SetRange("Document Type", FromSalesHeader."Document Type");
+                    FromSalesLine.SetRange("Document No.", FromSalesHeader."No.");
+                    // FromSalesLine.SETRANGE(Type,FromSalesLine.Type::Item);
+                    FromSalesLine.SetFilter("No.", '<>%1', '');
+                    //Alle VPB FromSalesLine.SETFILTER("Shipment Date",'<=%1',ToSalesHeader."Order Date");
+                    FromSalesLine.SetFilter("Qty. to Ship", '>%1', 0);
+                    if FromSalesLine.FindSet then
+                        repeat /* Alle VPB Commented this is not required feature
                         SalesLineLocal.RESET;
                         SalesLineLocal.SETCURRENTKEY("Document Type","Document No.",Type,"No.");
                         SalesLineLocal.SETRANGE("Document Type",ToSalesHeader."Document Type");
@@ -833,43 +879,55 @@ Page 50034 "Sales Desp. Order Subform"
                           END
                         ELSE
                          Alle VPB Commented this is not required feature */
-                begin
-                    CopySalesLine(ToSalesHeader, ToSalesLine, FromSalesHeader, FromSalesLine, NextLineNo, LinesNotCopied, 0);
-                    CopyFromSalesDocDimToLine(ToSalesLine, FromSalesLine);
+                        begin
+                            CopySalesLine(ToSalesHeader, ToSalesLine, FromSalesHeader, FromSalesLine, NextLineNo, LinesNotCopied, 0);
+                            CopyFromSalesDocDimToLine(ToSalesLine, FromSalesLine);
+                        end;
+                        until FromSalesLine.Next = 0;
                 end;
-                until FromSalesLine.Next = 0;
         end;
-        end;
-    //CF001 En
+        //CF001 En
     end;
-    procedure SalesHeaderDocType(DocType: Option): Integer var
+
+    procedure SalesHeaderDocType(DocType: Option): Integer
+    var
         SalesHeader: Record "Sales Header";
     begin
         //CF001 St
-        case DocType of SalesHeader."document type"::Quote: exit(SalesHeader."document type"::Quote);
-        SalesHeader."document type"::"Blanket Order": exit(SalesHeader."document type"::"Blanket Order");
-        SalesHeader."document type"::Order: exit(SalesHeader."document type"::Order);
-        SalesHeader."document type"::Invoice: exit(SalesHeader."document type"::Invoice);
-        SalesHeader."document type"::"Return Order": exit(SalesHeader."document type"::"Return Order");
-        SalesHeader."document type"::"Credit Memo": exit(SalesHeader."document type"::"Credit Memo");
+        case DocType of
+            SalesHeader."document type"::Quote:
+                exit(SalesHeader."document type"::Quote);
+            SalesHeader."document type"::"Blanket Order":
+                exit(SalesHeader."document type"::"Blanket Order");
+            SalesHeader."document type"::Order:
+                exit(SalesHeader."document type"::Order);
+            SalesHeader."document type"::Invoice:
+                exit(SalesHeader."document type"::Invoice);
+            SalesHeader."document type"::"Return Order":
+                exit(SalesHeader."document type"::"Return Order");
+            SalesHeader."document type"::"Credit Memo":
+                exit(SalesHeader."document type"::"Credit Memo");
         end;
-    //CF001 En
+        //CF001 En
     end;
-    local procedure CheckItemAvailable(var ToSalesHeader: Record "Sales Header"; var ToSalesLine: Record "Sales Line")
+
+    local procedure CheckItemAvailable1(var ToSalesHeader: Record "Sales Header"; var ToSalesLine: Record "Sales Line")
     begin
         //CF001 St
-        ToSalesLine."Document Type":=ToSalesHeader."Document Type";
-        ToSalesLine."Document No.":=ToSalesHeader."No.";
-        ToSalesLine."Line No.":=0;
-        ToSalesLine.Type:=ToSalesLine.Type::Item;
-        ToSalesLine."Purchase Order No.":='';
-        ToSalesLine."Purch. Order Line No.":=0;
-        if ToSalesHeader."Order Date" <> 0D then ToSalesLine.Validate("Shipment Date", ToSalesHeader."Order Date")
+        ToSalesLine."Document Type" := ToSalesHeader."Document Type";
+        ToSalesLine."Document No." := ToSalesHeader."No.";
+        ToSalesLine."Line No." := 0;
+        ToSalesLine.Type := ToSalesLine.Type::Item;
+        ToSalesLine."Purchase Order No." := '';
+        ToSalesLine."Purch. Order Line No." := 0;
+        if ToSalesHeader."Order Date" <> 0D then
+            ToSalesLine.Validate("Shipment Date", ToSalesHeader."Order Date")
         else
             ToSalesLine.Validate("Shipment Date", WorkDate);
-    //ItemCheckAvail.SalesLineCheck(ToSalesLine);
-    //CF001 En
+        //ItemCheckAvail.SalesLineCheck(ToSalesLine);
+        //CF001 En
     end;
+
     local procedure CopySalesLine(var ToSalesHeader: Record "Sales Header"; var ToSalesLine: Record "Sales Line"; var FromSalesHeader: Record "Sales Header"; var FromSalesLine: Record "Sales Line"; var NextLineNo: Integer; var LinesNotCopied: Integer; ApplFromItemEntry: Integer)
     var
         ToSalesLine2: Record "Sales Line";
@@ -878,23 +936,23 @@ Page 50034 "Sales Desp. Order Subform"
         //SS
         OnBeforeInsertDispatchLine(ToSalesHeader, ToSalesLine, FromSalesHeader, FromSalesLine);
         //CF001 St
-        CopyThisLine:=true;
-        if(ToSalesHeader."Language Code" <> FromSalesHeader."Language Code") and (FromSalesLine."Attached to Line No." <> 0)then exit;
+        CopyThisLine := true;
+        if (ToSalesHeader."Language Code" <> FromSalesHeader."Language Code") and (FromSalesLine."Attached to Line No." <> 0) then exit;
         ToSalesLine.Init;
-        NextLineNo:=NextLineNo + 10000;
-        ToSalesLine."Document Type":=ToSalesHeader."Document Type";
-        ToSalesLine."Document No.":=ToSalesHeader."No.";
-        ToSalesLine."Document Subtype":=ToSalesHeader."Document Subtype";
-        ToSalesLine."Line No.":=NextLineNo;
+        NextLineNo := NextLineNo + 10000;
+        ToSalesLine."Document Type" := ToSalesHeader."Document Type";
+        ToSalesLine."Document No." := ToSalesHeader."No.";
+        ToSalesLine."Document Subtype" := ToSalesHeader."Document Subtype";
+        ToSalesLine."Line No." := NextLineNo;
         ToSalesLine.Validate("Currency Code", FromSalesHeader."Currency Code");
         ToSalesLine.Validate(Type, FromSalesLine.Type);
         IF ToSalesLine.Type <> ToSalesLine.Type::Item then begin
             ToSalesLine.Validate(Description, FromSalesLine.Description);
             ToSalesLine.Validate("Description 2", FromSalesLine."Description 2");
         end;
-        ToSalesLine."MRP No.":=FromSalesLine."MRP No."; //ALLE-NM 05072019
-        ToSalesLine."Sales Line No.":=FromSalesLine."Sales Line No."; //ALLE-NM 05072019
-        if(FromSalesLine.Type <> 0) and (FromSalesLine."No." <> '')then begin
+        ToSalesLine."MRP No." := FromSalesLine."MRP No."; //ALLE-NM 05072019
+        ToSalesLine."Sales Line No." := FromSalesLine."Sales Line No."; //ALLE-NM 05072019
+        if (FromSalesLine.Type <> 0) and (FromSalesLine."No." <> '') then begin
             ToSalesLine.Validate("No.", FromSalesLine."No.");
             ToSalesLine.Validate(Description, FromSalesLine.Description);
             ToSalesLine.Validate("Description 2", FromSalesLine."Description 2");
@@ -903,12 +961,12 @@ Page 50034 "Sales Desp. Order Subform"
             ToSalesLine.Validate("Unit of Measure", FromSalesLine."Unit of Measure");
             ToSalesLine.Validate("Unit of Measure Code", FromSalesLine."Unit of Measure Code");
             ToSalesLine.Validate(Quantity, 0);
-            ToSalesLine."Total Schedule Quantity":=FromSalesLine."Qty. to Ship";
+            ToSalesLine."Total Schedule Quantity" := FromSalesLine."Qty. to Ship";
             ToSalesLine.Validate("Total Schedule Quantity"); //5.51
             ToSalesLine.Validate("Work Type Code", FromSalesLine."Work Type Code");
-            if(ToSalesLine."Document Type" = ToSalesLine."document type"::Order) and (FromSalesLine."Purchasing Code" <> '')then ToSalesLine.Validate("Purchasing Code", FromSalesLine."Purchasing Code");
+            if (ToSalesLine."Document Type" = ToSalesLine."document type"::Order) and (FromSalesLine."Purchasing Code" <> '') then ToSalesLine.Validate("Purchasing Code", FromSalesLine."Purchasing Code");
         end;
-        if(FromSalesLine.Type = FromSalesLine.Type::" ") and (FromSalesLine."No." <> '')then ToSalesLine.Validate("No.", FromSalesLine."No.");
+        if (FromSalesLine.Type = FromSalesLine.Type::" ") and (FromSalesLine."No." <> '') then ToSalesLine.Validate("No.", FromSalesLine."No.");
         ToSalesLine.Validate("Description 2", FromSalesLine."Description 2");
         //ToSalesLine."Service Contract No." := FromSalesLine."Service Contract No.";
         //ToSalesLine."Service Order No." := FromSalesLine."Service Order No.";
@@ -916,24 +974,24 @@ Page 50034 "Sales Desp. Order Subform"
         //ToSalesLine."Appl.-to Service Entry" := FromSalesLine."Appl.-to Service Entry";
         //ToSalesLine."Service Item Line No." := FromSalesLine."Service Item Line No.";
         //ToSalesLine."Serv. Price Adjmt. Gr. Code" := FromSalesLine."Serv. Price Adjmt. Gr. Code";
-        ToSalesLine."Order No.":=ToSalesHeader."Order/Scd. No.";
-        ToSalesLine."Order Line No.":=FromSalesLine."Line No.";
-        ToSalesLine."Blanket Order No.":=FromSalesLine."Blanket Order No.";
-        ToSalesLine."Blanket Order Line No.":=FromSalesLine."Blanket Order Line No.";
-        ToSalesLine."Quatation No.":=FromSalesLine."Quatation No.";
-        ToSalesLine."Quotation Line No.":=FromSalesLine."Quotation Line No.";
-        ToSalesLine."Quotation Date":=FromSalesLine."Quotation Date";
-        ToSalesLine."MRP No.":=FromSalesLine."MRP No."; //ALLE-NM 05072019
-        ToSalesLine."Sales Line No.":=FromSalesLine."Sales Line No."; //ALLE-NM 05072019
+        ToSalesLine."Order No." := ToSalesHeader."Order/Scd. No.";
+        ToSalesLine."Order Line No." := FromSalesLine."Line No.";
+        ToSalesLine."Blanket Order No." := FromSalesLine."Blanket Order No.";
+        ToSalesLine."Blanket Order Line No." := FromSalesLine."Blanket Order Line No.";
+        ToSalesLine."Quatation No." := FromSalesLine."Quatation No.";
+        ToSalesLine."Quotation Line No." := FromSalesLine."Quotation Line No.";
+        ToSalesLine."Quotation Date" := FromSalesLine."Quotation Date";
+        ToSalesLine."MRP No." := FromSalesLine."MRP No."; //ALLE-NM 05072019
+        ToSalesLine."Sales Line No." := FromSalesLine."Sales Line No."; //ALLE-NM 05072019
         //ALLE 3.15>>
-        ToSalesLine."Customer Document No.":=FromSalesLine."Customer Document No.";
-        ToSalesLine."Customer Document Date":=FromSalesLine."Customer Document Date";
-        ToSalesLine."CT2 Form":=FromSalesLine."CT2 Form";
-        ToSalesLine."CT2 Form Line No.":=FromSalesLine."CT2 Form Line No.";
+        ToSalesLine."Customer Document No." := FromSalesLine."Customer Document No.";
+        ToSalesLine."Customer Document Date" := FromSalesLine."Customer Document Date";
+        ToSalesLine."CT2 Form" := FromSalesLine."CT2 Form";
+        ToSalesLine."CT2 Form Line No." := FromSalesLine."CT2 Form Line No.";
         //ALLE 3.15 <<
         //ALLE 3.16
-        ToSalesLine."CT3 Form":=FromSalesLine."CT3 Form";
-        ToSalesLine."CT3 Form Line No.":=FromSalesLine."CT3 Form Line No.";
+        ToSalesLine."CT3 Form" := FromSalesLine."CT3 Form";
+        ToSalesLine."CT3 Form Line No." := FromSalesLine."CT3 Form Line No.";
         //ALLE 3.16
         /*
         IF ToSalesHeader."Order Date"<>0D THEN
@@ -941,59 +999,62 @@ Page 50034 "Sales Desp. Order Subform"
         ELSE
           ToSalesLine.VALIDATE("Shipment Date",WORKDATE);
         */
-        ToSalesLine."Planned Delivery Date":=FromSalesLine."Planned Delivery Date";
-        ToSalesLine."Planned Shipment Date":=FromSalesLine."Planned Shipment Date";
+        ToSalesLine."Planned Delivery Date" := FromSalesLine."Planned Delivery Date";
+        ToSalesLine."Planned Shipment Date" := FromSalesLine."Planned Shipment Date";
         ToSalesLine.Validate("Shipment Date", FromSalesLine."Shipment Date");
-        ToSalesLine."Bin Code":=FromSalesLine."Bin Code";
+        ToSalesLine."Bin Code" := FromSalesLine."Bin Code";
         //vipin to get correct tax group code in case of spares
-        ToSalesLine."Tax Group Code":=FromSalesLine."Tax Group Code";
+        ToSalesLine."Tax Group Code" := FromSalesLine."Tax Group Code";
         //vipin to get correct tax group code in case of spares
-        if(ToSalesHeader."Language Code" <> FromSalesHeader."Language Code")then begin
-            if TransferExtendedText.SalesCheckIfAnyExtText(ToSalesLine, false)then begin
+        if (ToSalesHeader."Language Code" <> FromSalesHeader."Language Code") then begin
+            if TransferExtendedText.SalesCheckIfAnyExtText(ToSalesLine, false) then begin
                 TransferExtendedText.InsertSalesExtText(ToSalesLine);
                 ToSalesLine2.SetRange("Document Type", ToSalesLine."Document Type");
                 ToSalesLine2.SetRange("Document No.", ToSalesLine."Document No.");
                 ToSalesLine2.Find('+');
-                NextLineNo:=ToSalesLine2."Line No.";
+                NextLineNo := ToSalesLine2."Line No.";
             end;
         end;
-        if CopyThisLine then ToSalesLine.Insert
+        if CopyThisLine then
+            ToSalesLine.Insert
         else
-            LinesNotCopied:=LinesNotCopied + 1;
-    //CF001 En
+            LinesNotCopied := LinesNotCopied + 1;
+        //CF001 En
     end;
+
     local procedure CopyFromSalesDocDimToLine(var ToSalesLine: Record "Sales Line"; var FromSalesLine: Record "Sales Line")
     begin
-    //CF001 St
-    /* // BIS 1145
-        DocDim.SETRANGE("Table ID",DATABASE::"Sales Line");
-        DocDim.SETRANGE("Document Type",ToSalesLine."Document Type");
-        DocDim.SETRANGE("Document No.",ToSalesLine."Document No.");
-        DocDim.SETRANGE("Line No.",ToSalesLine."Line No.");
-        DocDim.DELETEALL;
-        ToSalesLine."Shortcut Dimension 1 Code" := FromSalesLine."Shortcut Dimension 1 Code";
-        ToSalesLine."Shortcut Dimension 2 Code" := FromSalesLine."Shortcut Dimension 2 Code";
-        FromDocDim.SETRANGE("Table ID",DATABASE::"Sales Line");
-        FromDocDim.SETRANGE("Document Type",FromSalesLine."Document Type");
-        FromDocDim.SETRANGE("Document No.",FromSalesLine."Document No.");
-        FromDocDim.SETRANGE("Line No.",FromSalesLine."Line No.");
-        IF FromDocDim.FINDSET THEN
-          BEGIN
-            REPEAT
-              DocDim.INIT;
-              DocDim."Table ID" := DATABASE::"Sales Line";
-              DocDim."Document Type" := ToSalesLine."Document Type";
-              DocDim."Document No." := ToSalesLine."Document No.";
-              DocDim."Line No." := ToSalesLine."Line No.";
-              DocDim."Dimension Code" := FromDocDim."Dimension Code";
-              DocDim."Dimension Value Code" := FromDocDim."Dimension Value Code";
-              DocDim.INSERT;
-            UNTIL FromDocDim.NEXT = 0;
-          END;
-        */
-    // BIS 1145
-    //CF001 En
+        //CF001 St
+        /* // BIS 1145
+            DocDim.SETRANGE("Table ID",DATABASE::"Sales Line");
+            DocDim.SETRANGE("Document Type",ToSalesLine."Document Type");
+            DocDim.SETRANGE("Document No.",ToSalesLine."Document No.");
+            DocDim.SETRANGE("Line No.",ToSalesLine."Line No.");
+            DocDim.DELETEALL;
+            ToSalesLine."Shortcut Dimension 1 Code" := FromSalesLine."Shortcut Dimension 1 Code";
+            ToSalesLine."Shortcut Dimension 2 Code" := FromSalesLine."Shortcut Dimension 2 Code";
+            FromDocDim.SETRANGE("Table ID",DATABASE::"Sales Line");
+            FromDocDim.SETRANGE("Document Type",FromSalesLine."Document Type");
+            FromDocDim.SETRANGE("Document No.",FromSalesLine."Document No.");
+            FromDocDim.SETRANGE("Line No.",FromSalesLine."Line No.");
+            IF FromDocDim.FINDSET THEN
+              BEGIN
+                REPEAT
+                  DocDim.INIT;
+                  DocDim."Table ID" := DATABASE::"Sales Line";
+                  DocDim."Document Type" := ToSalesLine."Document Type";
+                  DocDim."Document No." := ToSalesLine."Document No.";
+                  DocDim."Line No." := ToSalesLine."Line No.";
+                  DocDim."Dimension Code" := FromDocDim."Dimension Code";
+                  DocDim."Dimension Value Code" := FromDocDim."Dimension Value Code";
+                  DocDim.INSERT;
+                UNTIL FromDocDim.NEXT = 0;
+              END;
+            */
+        // BIS 1145
+        //CF001 En
     end;
+
     procedure PacketQuantity()
     var
         SalesPacketBufferLocal: Record "SSD Sales Schedule Buffer";
@@ -1004,7 +1065,7 @@ Page 50034 "Sales Desp. Order Subform"
         if Rec.Type = Rec.Type::Item then begin
             CheckOrderStatus(Rec);
             //ALLE 3.08
-            if Item.Get(Rec."No.")then begin
+            if Item.Get(Rec."No.") then begin
                 Item.TestField("Gross Weight");
                 Item.TestField("Net Weight");
             end;
@@ -1031,8 +1092,9 @@ Page 50034 "Sales Desp. Order Subform"
                 Rec.Validate("Qty. to Ship", TmpSalesPacketBufferLocal."Total Qty");
             end;
         end;
-    //CF001 En
+        //CF001 En
     end;
+
     procedure CheckOrderStatus(RecSalesLine: Record "Sales Line")
     var
         SalesHeaderLocal: Record "Sales Header";
@@ -1041,41 +1103,50 @@ Page 50034 "Sales Desp. Order Subform"
         SalesHeaderLocal.TestField(Status, SalesHeaderLocal.Status::Open);
         if RecSalesLine."Quantity Shipped" > 0 then Error(Text002, RecSalesLine."Document No.", RecSalesLine."Line No.", RecSalesLine."No.");
     end;
+
     local procedure NoOnAfterValidate()
     begin
         InsertExtendedText(false);
-        if(Rec.Type = Rec.Type::"Charge (Item)") and (Rec."No." <> xRec."No.") and (xRec."No." <> '')then CurrPage.SaveRecord;
+        if (Rec.Type = Rec.Type::"Charge (Item)") and (Rec."No." <> xRec."No.") and (xRec."No." <> '') then CurrPage.SaveRecord;
     end;
+
     local procedure CrossReferenceNoOnAfterValidat()
     begin
         InsertExtendedText(false);
     end;
+
     local procedure ReserveOnAfterValidate()
     begin
-        if(Rec.Reserve = Rec.Reserve::Always) and (Rec."Outstanding Qty. (Base)" <> 0)then begin
+        if (Rec.Reserve = Rec.Reserve::Always) and (Rec."Outstanding Qty. (Base)" <> 0) then begin
             CurrPage.SaveRecord;
             Rec.AutoReserve;
             CurrPage.Update(false);
         end;
     end;
+
     local procedure QuantityOnAfterValidate()
     var
         UpdateIsDone: Boolean;
     begin
-        if Rec.Type = Rec.Type::Item then case Rec.Reserve of Rec.Reserve::Always: begin
-                CurrPage.SaveRecord;
-                Rec.AutoReserve;
-                CurrPage.Update(false);
-                UpdateIsDone:=true;
+        if Rec.Type = Rec.Type::Item then
+            case Rec.Reserve of
+                Rec.Reserve::Always:
+                    begin
+                        CurrPage.SaveRecord;
+                        Rec.AutoReserve;
+                        CurrPage.Update(false);
+                        UpdateIsDone := true;
+                    end;
+                Rec.Reserve::Optional:
+                    if (Rec.Quantity < xRec.Quantity) and (xRec.Quantity > 0) then begin
+                        CurrPage.SaveRecord;
+                        CurrPage.Update(false);
+                        UpdateIsDone := true;
+                    end;
             end;
-            Rec.Reserve::Optional: if(Rec.Quantity < xRec.Quantity) and (xRec.Quantity > 0)then begin
-                    CurrPage.SaveRecord;
-                    CurrPage.Update(false);
-                    UpdateIsDone:=true;
-                end;
-            end;
-        if(Rec.Type = Rec.Type::Item) and (Rec.Quantity <> xRec.Quantity) and not UpdateIsDone then CurrPage.Update(true);
+        if (Rec.Type = Rec.Type::Item) and (Rec.Quantity <> xRec.Quantity) and not UpdateIsDone then CurrPage.Update(true);
     end;
+
     local procedure UnitofMeasureCodeOnAfterValida()
     begin
         if Rec.Reserve = Rec.Reserve::Always then begin
@@ -1084,6 +1155,7 @@ Page 50034 "Sales Desp. Order Subform"
             CurrPage.Update(false);
         end;
     end;
+
     [IntegrationEvent(false, false)]
     local procedure OnBeforeInsertDispatchLine(ToSalesHeader: Record "Sales Header"; ToSalesLine: Record "Sales Line"; FromSalesHeader: Record "Sales Header"; FromSalesLine: Record "Sales Line")
     begin
