@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+      <rd:SecurityType>None</rd:SecurityType>
+    </DataSource>
+  </DataSources>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>2in</Height>
+        <Style />
+      </Body>
+      <Width>6.5in</Width>
+      <Page>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <Code>Public Function BlankZero(ByVal Value As Decimal)
+    if Value = 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankPos(ByVal Value As Decimal)
+    if Value &gt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankZeroAndPos(ByVal Value As Decimal)
+    if Value &gt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNeg(ByVal Value As Decimal)
+    if Value &lt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNegAndZero(ByVal Value As Decimal)
+    if Value &lt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+</Code>
+  <Language>=User!Language</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="ReportForNavId_1000000031">
+          <DataField>ReportForNavId_1000000031</DataField>
+        </Field>
+        <Field Name="UserId">
+          <DataField>UserId</DataField>
+        </Field>
+        <Field Name="CurrReport_PAGENO">
+          <DataField>CurrReport_PAGENO</DataField>
+        </Field>
+        <Field Name="FORMAT_TODAY_0_4_">
+          <DataField>FORMAT_TODAY_0_4_</DataField>
+        </Field>
+        <Field Name="Salary_">
+          <DataField>Salary_</DataField>
+        </Field>
+        <Field Name="ResCen__Address_2_1">
+          <DataField>ResCen__Address_2_1</DataField>
+        </Field>
+        <Field Name="ResCen_Address1">
+          <DataField>ResCen_Address1</DataField>
+        </Field>
+        <Field Name="ResCen_Name1">
+          <DataField>ResCen_Name1</DataField>
+        </Field>
+        <Field Name="ResCen_City_______ResCen__Post_Code_1">
+          <DataField>ResCen_City_______ResCen__Post_Code_1</DataField>
+        </Field>
+        <Field Name="ResCen_State1">
+          <DataField>ResCen_State1</DataField>
+        </Field>
+        <Field Name="FilterText1">
+          <DataField>FilterText1</DataField>
+        </Field>
+        <Field Name="TDS_SummaryCaption1">
+          <DataField>TDS_SummaryCaption1</DataField>
+        </Field>
+        <Field Name="CurrReport_PAGENOCaption1">
+          <DataField>CurrReport_PAGENOCaption1</DataField>
+        </Field>
+        <Field Name="TDS_Amt_Caption1">
+          <DataField>TDS_Amt_Caption1</DataField>
+        </Field>
+        <Field Name="Employee_Dimension_Code___NameCaption1">
+          <DataField>Employee_Dimension_Code___NameCaption1</DataField>
+        </Field>
+        <Field Name="DateCaption1">
+          <DataField>DateCaption1</DataField>
+        </Field>
+        <Field Name="ERP_Voucher_No_Caption1">
+          <DataField>ERP_Voucher_No_Caption1</DataField>
+        </Field>
+        <Field Name="Dimension_Value_Dimension_Code1">
+          <DataField>Dimension_Value_Dimension_Code1</DataField>
+        </Field>
+        <Field Name="Dimension_Value_Code1">
+          <DataField>Dimension_Value_Code1</DataField>
+        </Field>
+        <Field Name="ReportForNavId_1000000012">
+          <DataField>ReportForNavId_1000000012</DataField>
+        </Field>
+        <Field Name="DimensionSetID_DimensionSetEntry">
+          <DataField>DimensionSetID_DimensionSetEntry</DataField>
+        </Field>
+        <Field Name="DimensionCode_DimensionSetEntry">
+          <DataField>DimensionCode_DimensionSetEntry</DataField>
+        </Field>
+        <Field Name="DimensionValueCode_DimensionSetEntry">
+          <DataField>DimensionValueCode_DimensionSetEntry</DataField>
+        </Field>
+        <Field Name="DimensionValueID_DimensionSetEntry">
+          <DataField>DimensionValueID_DimensionSetEntry</DataField>
+        </Field>
+        <Field Name="DimensionName_DimensionSetEntry">
+          <DataField>DimensionName_DimensionSetEntry</DataField>
+        </Field>
+        <Field Name="DimensionValueName_DimensionSetEntry">
+          <DataField>DimensionValueName_DimensionSetEntry</DataField>
+        </Field>
+        <Field Name="ReportForNavId_1000000005">
+          <DataField>ReportForNavId_1000000005</DataField>
+        </Field>
+        <Field Name="ABS__G_L_Entry__Amount_">
+          <DataField>ABS__G_L_Entry__Amount_</DataField>
+        </Field>
+        <Field Name="ABS__G_L_Entry__Amount_Format">
+          <DataField>ABS__G_L_Entry__Amount_Format</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Posting_Date_">
+          <DataField>G_L_Entry__Posting_Date_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Document_No__">
+          <DataField>G_L_Entry__Document_No__</DataField>
+        </Field>
+        <Field Name="G_L_Entry_Entry_No_">
+          <DataField>G_L_Entry_Entry_No_</DataField>
+        </Field>
+        <Field Name="DimensionSetID_GLEntry">
+          <DataField>DimensionSetID_GLEntry</DataField>
+        </Field>
+        <Field Name="DimensionName">
+          <DataField>DimensionName</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
+</Report>

@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+      <rd:SecurityType>None</rd:SecurityType>
+    </DataSource>
+  </DataSources>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>2in</Height>
+        <Style />
+      </Body>
+      <Width>6.5in</Width>
+      <Page>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <Code>Public Function BlankZero(ByVal Value As Decimal)
+    if Value = 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankPos(ByVal Value As Decimal)
+    if Value &gt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankZeroAndPos(ByVal Value As Decimal)
+    if Value &gt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNeg(ByVal Value As Decimal)
+    if Value &lt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNegAndZero(ByVal Value As Decimal)
+    if Value &lt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+</Code>
+  <Language>=User!Language</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="ReportForNavId_1000000000">
+          <DataField>ReportForNavId_1000000000</DataField>
+        </Field>
+        <Field Name="EntryNo_ItemLedgerEntry">
+          <DataField>EntryNo_ItemLedgerEntry</DataField>
+        </Field>
+        <Field Name="ItemNo_ItemLedgerEntry">
+          <DataField>ItemNo_ItemLedgerEntry</DataField>
+        </Field>
+        <Field Name="Quantity_ItemLedgerEntry">
+          <DataField>Quantity_ItemLedgerEntry</DataField>
+        </Field>
+        <Field Name="LotNo_ItemLedgerEntry">
+          <DataField>LotNo_ItemLedgerEntry</DataField>
+        </Field>
+        <Field Name="Item_Description">
+          <DataField>Item_Description</DataField>
+        </Field>
+        <Field Name="Item_Description_2">
+          <DataField>Item_Description_2</DataField>
+        </Field>
+        <Field Name="UnitofMeasureCode_ItemLedgerEntry">
+          <DataField>UnitofMeasureCode_ItemLedgerEntry</DataField>
+        </Field>
+        <Field Name="CrossReferenceDescription">
+          <DataField>CrossReferenceDescription</DataField>
+        </Field>
+        <Field Name="ItemLedgerEntryPostingDate">
+          <DataField>ItemLedgerEntryPostingDate</DataField>
+        </Field>
+        <Field Name="ItemLedgerEntryExpirationDate">
+          <DataField>ItemLedgerEntryExpirationDate</DataField>
+        </Field>
+        <Field Name="NetWT">
+          <DataField>NetWT</DataField>
+        </Field>
+        <Field Name="GrossWT">
+          <DataField>GrossWT</DataField>
+        </Field>
+        <Field Name="NetWTLabel">
+          <DataField>NetWTLabel</DataField>
+        </Field>
+        <Field Name="GrossWTLabel">
+          <DataField>GrossWTLabel</DataField>
+        </Field>
+        <Field Name="mfgsLabel">
+          <DataField>mfgsLabel</DataField>
+        </Field>
+        <Field Name="BestBeforeLabel">
+          <DataField>BestBeforeLabel</DataField>
+        </Field>
+        <Field Name="CompanyInfo2Picture">
+          <DataField>CompanyInfo2Picture</DataField>
+        </Field>
+        <Field Name="CompanyInfo3Picture">
+          <DataField>CompanyInfo3Picture</DataField>
+        </Field>
+        <Field Name="CompanyInfo1Picture">
+          <DataField>CompanyInfo1Picture</DataField>
+        </Field>
+        <Field Name="ProductType">
+          <DataField>ProductType</DataField>
+        </Field>
+        <Field Name="UNNumber">
+          <DataField>UNNumber</DataField>
+        </Field>
+        <Field Name="SingleWord">
+          <DataField>SingleWord</DataField>
+        </Field>
+        <Field Name="QRImages_QRPrintingItemInfo">
+          <DataField>QRImages_QRPrintingItemInfo</DataField>
+        </Field>
+        <Field Name="QRImages2_QRPrintingItemInfo">
+          <DataField>QRImages2_QRPrintingItemInfo</DataField>
+        </Field>
+        <Field Name="QRImages3_QRPrintingItemInfo">
+          <DataField>QRImages3_QRPrintingItemInfo</DataField>
+        </Field>
+        <Field Name="QRImages4_QRPrintingItemInfo">
+          <DataField>QRImages4_QRPrintingItemInfo</DataField>
+        </Field>
+        <Field Name="QRIndex_QRPrintingItemInfo">
+          <DataField>QRIndex_QRPrintingItemInfo</DataField>
+        </Field>
+        <Field Name="QRIndex2_QRPrintingItemInfo">
+          <DataField>QRIndex2_QRPrintingItemInfo</DataField>
+        </Field>
+        <Field Name="QRIndex3_QRPrintingItemInfo">
+          <DataField>QRIndex3_QRPrintingItemInfo</DataField>
+        </Field>
+        <Field Name="QRIndex4_QRPrintingItemInfos">
+          <DataField>QRIndex4_QRPrintingItemInfos</DataField>
+        </Field>
+        <Field Name="ReportForNavId_1000000011">
+          <DataField>ReportForNavId_1000000011</DataField>
+        </Field>
+        <Field Name="QRCode">
+          <DataField>QRCode</DataField>
+        </Field>
+        <Field Name="Sno">
+          <DataField>Sno</DataField>
+        </Field>
+        <Field Name="QRPrintingType_QRPrintingItemInfo">
+          <DataField>QRPrintingType_QRPrintingItemInfo</DataField>
+        </Field>
+        <Field Name="QRPrintingCode_QRPrintingItemInfo">
+          <DataField>QRPrintingCode_QRPrintingItemInfo</DataField>
+        </Field>
+        <Field Name="ItemNo_QRPrintingItemInfo">
+          <DataField>ItemNo_QRPrintingItemInfo</DataField>
+        </Field>
+        <Field Name="QRDescription_QRPrintingItemInfo">
+          <DataField>QRDescription_QRPrintingItemInfo</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
+</Report>

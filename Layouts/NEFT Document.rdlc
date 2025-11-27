@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+      <rd:SecurityType>None</rd:SecurityType>
+    </DataSource>
+  </DataSources>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>2in</Height>
+        <Style />
+      </Body>
+      <Width>6.5in</Width>
+      <Page>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <Code>Public Function BlankZero(ByVal Value As Decimal)
+    if Value = 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankPos(ByVal Value As Decimal)
+    if Value &gt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankZeroAndPos(ByVal Value As Decimal)
+    if Value &gt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNeg(ByVal Value As Decimal)
+    if Value &lt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNegAndZero(ByVal Value As Decimal)
+    if Value &lt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+</Code>
+  <Language>=User!Language</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="ReportForNavId_7069">
+          <DataField>ReportForNavId_7069</DataField>
+        </Field>
+        <Field Name="CompInfo_Name">
+          <DataField>CompInfo_Name</DataField>
+        </Field>
+        <Field Name="RespCent_Address______RespCent__Address_2_">
+          <DataField>RespCent_Address______RespCent__Address_2_</DataField>
+        </Field>
+        <Field Name="RespCent__Address_2________RespCent_City_____RespCent__Post_Code_">
+          <DataField>RespCent__Address_2________RespCent_City_____RespCent__Post_Code_</DataField>
+        </Field>
+        <Field Name="Fax____FORMAT_RespCent__Fax_No___">
+          <DataField>Fax____FORMAT_RespCent__Fax_No___</DataField>
+        </Field>
+        <Field Name="Phone____FORMAT_RespCent__Phone_No___">
+          <DataField>Phone____FORMAT_RespCent__Phone_No___</DataField>
+        </Field>
+        <Field Name="Email____RespCent__E_Mail________RespCent__Home_Page_">
+          <DataField>Email____RespCent__E_Mail________RespCent__Home_Page_</DataField>
+        </Field>
+        <Field Name="CompInfo_Picture">
+          <DataField>CompInfo_Picture</DataField>
+        </Field>
+        <Field Name="Date____FORMAT__Posting_Date__0_4_">
+          <DataField>Date____FORMAT__Posting_Date__0_4_</DataField>
+        </Field>
+        <Field Name="Ref__________Our_Account_No____BankAcc__Bank_Account_No_____with_you_">
+          <DataField>Ref__________Our_Account_No____BankAcc__Bank_Account_No_____with_you_</DataField>
+        </Field>
+        <Field Name="Document_No______Document_No__">
+          <DataField>Document_No______Document_No__</DataField>
+        </Field>
+        <Field Name="BankAccount_Name">
+          <DataField>BankAccount_Name</DataField>
+        </Field>
+        <Field Name="BankAccount_Address______BankAccount__Address_2_">
+          <DataField>BankAccount_Address______BankAccount__Address_2_</DataField>
+        </Field>
+        <Field Name="BankAccount_City_______BankAccount__Post_Code_">
+          <DataField>BankAccount_City_______BankAccount__Post_Code_</DataField>
+        </Field>
+        <Field Name="vend_Name">
+          <DataField>vend_Name</DataField>
+        </Field>
+        <Field Name="vend_Address______vend__Address_2________vend_City_______vend__State_Code_">
+          <DataField>vend_Address______vend__Address_2________vend_City_______vend__State_Code_</DataField>
+        </Field>
+        <Field Name="VendBankAcc__Bank_Account_No__">
+          <DataField>VendBankAcc__Bank_Account_No__</DataField>
+        </Field>
+        <Field Name="VendBankAcc_Name">
+          <DataField>VendBankAcc_Name</DataField>
+        </Field>
+        <Field Name="VendBankAcc_Address______VendBankAcc__Address_2_">
+          <DataField>VendBankAcc_Address______VendBankAcc__Address_2_</DataField>
+        </Field>
+        <Field Name="NoInText_1_">
+          <DataField>NoInText_1_</DataField>
+        </Field>
+        <Field Name="VendBankAcc_City">
+          <DataField>VendBankAcc_City</DataField>
+        </Field>
+        <Field Name="G_L_Entry__G_L_Entry___NEFT___RTGS_Code_">
+          <DataField>G_L_Entry__G_L_Entry___NEFT___RTGS_Code_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__G_L_Entry__Amount">
+          <DataField>G_L_Entry__G_L_Entry__Amount</DataField>
+        </Field>
+        <Field Name="G_L_Entry__G_L_Entry__AmountFormat">
+          <DataField>G_L_Entry__G_L_Entry__AmountFormat</DataField>
+        </Field>
+        <Field Name="CompInfo_Name_Control1000000043">
+          <DataField>CompInfo_Name_Control1000000043</DataField>
+        </Field>
+        <Field Name="The_ManagerCaption">
+          <DataField>The_ManagerCaption</DataField>
+        </Field>
+        <Field Name="Barclays_Bank_PlcCaption">
+          <DataField>Barclays_Bank_PlcCaption</DataField>
+        </Field>
+        <Field Name="Nehru_PlaceCaption">
+          <DataField>Nehru_PlaceCaption</DataField>
+        </Field>
+        <Field Name="Gr____First_Floor__Eros_Corporate_TowerCaption">
+          <DataField>Gr____First_Floor__Eros_Corporate_TowerCaption</DataField>
+        </Field>
+        <Field Name="New_Delhi__110019Caption">
+          <DataField>New_Delhi__110019Caption</DataField>
+        </Field>
+        <Field Name="Dear_Sir_Caption">
+          <DataField>Dear_Sir_Caption</DataField>
+        </Field>
+        <Field Name="Sub__________National_Electronic_Fund_Transfer__NEFT__ApplicationCaption">
+          <DataField>Sub__________National_Electronic_Fund_Transfer__NEFT__ApplicationCaption</DataField>
+        </Field>
+        <Field Name="Kindly_transfer_fund_through_NEFT_to_the_beneficiary_as_detail_given_hereunder_Caption">
+          <DataField>Kindly_transfer_fund_through_NEFT_to_the_beneficiary_as_detail_given_hereunder_Caption</DataField>
+        </Field>
+        <Field Name="Beneficiary_Details_Caption">
+          <DataField>Beneficiary_Details_Caption</DataField>
+        </Field>
+        <Field Name="Beneficiary_NameCaption">
+          <DataField>Beneficiary_NameCaption</DataField>
+        </Field>
+        <Field Name="Beneficiary_AddressCaption">
+          <DataField>Beneficiary_AddressCaption</DataField>
+        </Field>
+        <Field Name="Beneficiary_BankCaption">
+          <DataField>Beneficiary_BankCaption</DataField>
+        </Field>
+        <Field Name="Account_NumberCaption">
+          <DataField>Account_NumberCaption</DataField>
+        </Field>
+        <Field Name="Beneficiary_BranchCaption">
+          <DataField>Beneficiary_BranchCaption</DataField>
+        </Field>
+        <Field Name="LocationCaption">
+          <DataField>LocationCaption</DataField>
+        </Field>
+        <Field Name="Amount__in_figures_Caption">
+          <DataField>Amount__in_figures_Caption</DataField>
+        </Field>
+        <Field Name="NEFT___RTGS_CodeCaption">
+          <DataField>NEFT___RTGS_CodeCaption</DataField>
+        </Field>
+        <Field Name="Amount__in_words_Caption">
+          <DataField>Amount__in_words_Caption</DataField>
+        </Field>
+        <Field Name="With_Warm_RegardsCaption">
+          <DataField>With_Warm_RegardsCaption</DataField>
+        </Field>
+        <Field Name="SincerelyCaption">
+          <DataField>SincerelyCaption</DataField>
+        </Field>
+        <Field Name="Authorised_SignatoryCaption">
+          <DataField>Authorised_SignatoryCaption</DataField>
+        </Field>
+        <Field Name="G_L_Entry_Entry_No_">
+          <DataField>G_L_Entry_Entry_No_</DataField>
+        </Field>
+        <Field Name="G_L_Entry_Document_No_">
+          <DataField>G_L_Entry_Document_No_</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
+</Report>
