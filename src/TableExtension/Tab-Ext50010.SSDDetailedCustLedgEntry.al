@@ -12,12 +12,16 @@ TableExtension 50010 "SSD Detailed Cust. Ledg. Entry" extends "Detailed Cust. Le
         field(50002; crminsertflag; Boolean)
         {
             DataClassification = CustomerContent;
-            Caption = 'crminsertflag';
+            //Atul::01122025
+            Caption = 'Insert Status';
+            //Atul::01122025;
         }
         field(50003; iscrmexception; Boolean)
         {
             DataClassification = CustomerContent;
-            Caption = 'iscrmexception';
+            //Atul::01122025
+            Caption = 'Exception Occurred';
+            //Atul::01122025
         }
     }
 }

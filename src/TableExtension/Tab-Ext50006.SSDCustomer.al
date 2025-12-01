@@ -4,85 +4,89 @@ TableExtension 50006 "SSD Customer" extends Customer
     {
         modify("Currency Code")
         {
-        TableRelation = Currency where(Code=filter(<>'INR'));
+            TableRelation = Currency where(Code = filter(<> 'INR'));
         }
         modify("Currency Filter")
         {
-        TableRelation = Currency where(Code=filter(<>'INR'));
+            TableRelation = Currency where(Code = filter(<> 'INR'));
         }
         modify(Name)
         {
-        trigger OnAfterValidate()
-        begin
-            Name:=UpperCase(Name);
-        end;
+            trigger OnAfterValidate()
+            begin
+                Name := UpperCase(Name);
+            end;
         }
         modify("Name 2")
         {
-        trigger OnAfterValidate()
-        begin
-            "Name 2":=UpperCase("Name 2");
-        end;
+            trigger OnAfterValidate()
+            begin
+                "Name 2" := UpperCase("Name 2");
+            end;
         }
         modify(Address)
         {
-        trigger OnAfterValidate()
-        begin
-            Address:=UpperCase(Address);
-        end;
+            trigger OnAfterValidate()
+            begin
+                Address := UpperCase(Address);
+            end;
         }
         modify(Blocked)
         {
-        trigger OnBeforeValidate()
-        begin
-            if Blocked = Blocked::" " THEN BEGIN
-                UserSetup.GET(USERID);
-                if NOT UserSetup."Customer UnBlock Rights" THEN ERROR(BlockErr);
-                if "Salesperson Code" = '' THEN ERROR(SalesPersonErr);
+            trigger OnBeforeValidate()
+            begin
+                if Blocked = Blocked::" " THEN BEGIN
+                    UserSetup.GET(USERID);
+                    if NOT UserSetup."Customer UnBlock Rights" THEN ERROR(BlockErr);
+                    if "Salesperson Code" = '' THEN ERROR(SalesPersonErr);
+                end;
             end;
-        end;
-        trigger OnAfterValidate()
-        var
-            Alle: Codeunit "Alle Events";
-        begin
-            if not "First Release" then ERROR('YOU CANNOT BLOCK/UNBLOCK THIS VENDOR, KINDLY CONTACT ADMINISTRATOR');
-            Alle.SendMailForCustomerBlk(Rec);
-        END;
+
+            trigger OnAfterValidate()
+            var
+                Alle: Codeunit "Alle Events";
+            begin
+                if not "First Release" then ERROR('YOU CANNOT BLOCK/UNBLOCK THIS VENDOR, KINDLY CONTACT ADMINISTRATOR');
+                Alle.SendMailForCustomerBlk(Rec);
+            END;
         }
         modify("Shipping Time")
         {
-        trigger OnAfterValidate()
-        begin
-            EVALUATE(Text1, FORMAT("Shipping Time"));
-            Var2:=STRLEN(Text1);
-            Var1:=COPYSTR(Text1, Var2, Var2);
-            Var3:=COPYSTR(Text1, 1, Var2 - 1);
-            EVALUATE(Int1, Var3);
-            IF Var1 = 'D' THEN "Shipping Time In Days":=Int1 * 1
-            ELSE IF Var1 = 'M' THEN "Shipping Time In Days":=Int1 * 30
-                ELSE IF Var1 = 'Q' THEN "Shipping Time In Days":=Int1 * 90
-                    ELSE
-                        "Shipping Time In Days":=Int1 * 7;
-        end;
+            trigger OnAfterValidate()
+            begin
+                EVALUATE(Text1, FORMAT("Shipping Time"));
+                Var2 := STRLEN(Text1);
+                Var1 := COPYSTR(Text1, Var2, Var2);
+                Var3 := COPYSTR(Text1, 1, Var2 - 1);
+                EVALUATE(Int1, Var3);
+                IF Var1 = 'D' THEN
+                    "Shipping Time In Days" := Int1 * 1
+                ELSE IF Var1 = 'M' THEN
+                    "Shipping Time In Days" := Int1 * 30
+                ELSE IF Var1 = 'Q' THEN
+                    "Shipping Time In Days" := Int1 * 90
+                ELSE
+                    "Shipping Time In Days" := Int1 * 7;
+            end;
         }
         modify("P.A.N. No.")
         {
-        trigger OnAfterValidate()
-        begin
-            IF STRLEN("P.A.N. No.") <> 10 THEN ERROR('P.A.N. No. need to be of length 10');
-            Customer.Reset();
-            Customer.SETRANGE("P.A.N. No.", "P.A.N. No.");
-            IF Customer.FINDFIRST THEN IF NOT CONFIRM(STRSUBSTNO(TxtConfirm, Customer."No.", Customer."P.A.N. No."))THEN "P.A.N. No.":='';
-        end;
+            trigger OnAfterValidate()
+            begin
+                IF STRLEN("P.A.N. No.") <> 10 THEN ERROR('P.A.N. No. need to be of length 10');
+                Customer.Reset();
+                Customer.SETRANGE("P.A.N. No.", "P.A.N. No.");
+                IF Customer.FINDFIRST THEN IF NOT CONFIRM(STRSUBSTNO(TxtConfirm, Customer."No.", Customer."P.A.N. No.")) THEN "P.A.N. No." := '';
+            end;
         }
         modify("GST Registration No.")
         {
-        trigger OnAfterValidate()
-        begin
-            Customer.Reset();
-            Customer.SETRANGE("GST Registration No.", "GST Registration No.");
-            IF Customer.FINDFIRST THEN IF NOT CONFIRM(STRSUBSTNO(TxtConfirm1, Customer."No.", Customer."GST Registration No."))THEN "GST Registration No.":='';
-        end;
+            trigger OnAfterValidate()
+            begin
+                Customer.Reset();
+                Customer.SETRANGE("GST Registration No.", "GST Registration No.");
+                IF Customer.FINDFIRST THEN IF NOT CONFIRM(STRSUBSTNO(TxtConfirm1, Customer."No.", Customer."GST Registration No.")) THEN "GST Registration No." := '';
+            end;
         }
         field(50000; "Freight Zone"; Code[20])
         {
@@ -124,7 +128,7 @@ TableExtension 50006 "SSD Customer" extends Customer
         field(50006; "NSM Code"; Text[20])
         {
             Description = 'ALE[5.51]Dt-3-2-12';
-            TableRelation = "Dimension Value".Code where("Dimension Code"=const('EMPLOYEE'));
+            TableRelation = "Dimension Value".Code where("Dimension Code" = const('EMPLOYEE'));
             DataClassification = CustomerContent;
             Caption = 'NSM Code';
 
@@ -135,7 +139,7 @@ TableExtension 50006 "SSD Customer" extends Customer
                 DimensionValue.Reset();
                 DimensionValue.SetRange(DimensionValue."Dimension Code", 'EMPLOYEE');
                 DimensionValue.SetRange(DimensionValue.Code, "NSM Code");
-                if DimensionValue.FindFirst()then "NSM Name":=DimensionValue.Name;
+                if DimensionValue.FindFirst() then "NSM Name" := DimensionValue.Name;
             end;
         }
         field(50007; "NSM Name"; Text[50])
@@ -166,13 +170,17 @@ TableExtension 50006 "SSD Customer" extends Customer
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'crminsertflag';
+            //Atul::01122025
+            Caption = 'Insert Status';
+            //Atul::01122025;
         }
         field(50011; crmupdateflag; Boolean)
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'crmupdateflag';
+            //Atul::01122025
+            Caption = 'Update Status';
+            //Atul::01122025
         }
         field(50012; "CRM Temp Id"; Text[30])
         {
@@ -184,13 +192,15 @@ TableExtension 50006 "SSD Customer" extends Customer
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'isCRMexception';
+            //Atul::01122025
+            Caption = 'Exception Occurred';
+            //Atul::01122025
         }
         field(50014; exceptiondetail; Text[200])
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'exceptiondetail';
+            Caption = 'Exception Occurred';
         }
         field(50020; "QR Code"; Blob)
         {
@@ -320,12 +330,13 @@ TableExtension 50006 "SSD Customer" extends Customer
     begin
         UserSetup.Get(UserId);
         if not UserSetup."Master Editing Permission" then Error(TextLocal50001);
-        crmupdateflag:=true;
-        Sync:=false;
+        crmupdateflag := true;
+        Sync := false;
     end;
+
     trigger OnInsert()
     begin
-        Blocked:=Blocked::All;
+        Blocked := Blocked::All;
     end;
     /// <summary>
     /// CheckBlockedCustOnDocsForDisOrd.
@@ -336,17 +347,19 @@ TableExtension 50006 "SSD Customer" extends Customer
     /// <param name="Transaction">Boolean.</param>
     procedure CheckBlockedCustOnDocsForDisOrd(Cust2: Record Customer; DocType: Enum "Sales Document Type"; Shipment: Boolean; Transaction: Boolean)
     begin
-        if((Cust2.Blocked = Cust2.Blocked::All) or ((Cust2.Blocked = Cust2.Blocked::Invoice) and (DocType in[Doctype::Quote, Doctype::Order, Doctype::Invoice, Doctype::"Blanket Order"]))) or ((Cust2.Blocked = Cust2.Blocked::Ship) and (DocType in[Doctype::Quote, Doctype::Order, Doctype::"Blanket Order"]) and (not Transaction)) or ((Cust2.Blocked = Cust2.Blocked::Ship) and (DocType in[Doctype::Quote, Doctype::Order, Doctype::Invoice, Doctype::"Blanket Order"]) and Shipment and Transaction)then Cust2.CustBlockedErrorMessage(Cust2, Transaction);
+        if ((Cust2.Blocked = Cust2.Blocked::All) or ((Cust2.Blocked = Cust2.Blocked::Invoice) and (DocType in [Doctype::Quote, Doctype::Order, Doctype::Invoice, Doctype::"Blanket Order"]))) or ((Cust2.Blocked = Cust2.Blocked::Ship) and (DocType in [Doctype::Quote, Doctype::Order, Doctype::"Blanket Order"]) and (not Transaction)) or ((Cust2.Blocked = Cust2.Blocked::Ship) and (DocType in [Doctype::Quote, Doctype::Order, Doctype::Invoice, Doctype::"Blanket Order"]) and Shipment and Transaction) then Cust2.CustBlockedErrorMessage(Cust2, Transaction);
     end;
-    var Customer: Record Customer;
-    UserSetup: Record "User Setup";
-    BlockErr: Label 'You are not authourized to unblock Customer. Contact Administrator';
-    SalesPersonErr: Label 'Salesperson Code must not be Blank';
-    Var1: Text;
-    Var2: Integer;
-    Var3: Text;
-    Text1: Text;
-    Int1: Integer;
-    TxtConfirm: label 'This PAN No. already exist for Customer  %1  and PAN No. %2';
-    TxtConfirm1: label 'This GSTIN No. already exist for Customer  %1  and GSTIN No. %2';
+
+    var
+        Customer: Record Customer;
+        UserSetup: Record "User Setup";
+        BlockErr: Label 'You are not authourized to unblock Customer. Contact Administrator';
+        SalesPersonErr: Label 'Salesperson Code must not be Blank';
+        Var1: Text;
+        Var2: Integer;
+        Var3: Text;
+        Text1: Text;
+        Int1: Integer;
+        TxtConfirm: label 'This PAN No. already exist for Customer  %1  and PAN No. %2';
+        TxtConfirm1: label 'This GSTIN No. already exist for Customer  %1  and GSTIN No. %2';
 }

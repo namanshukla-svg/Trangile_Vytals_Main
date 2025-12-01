@@ -91,10 +91,12 @@ PageExtension 50045 pageextension70000016 extends "Item List"
         }
         addafter("Shelf No.")
         {
-            field("SQ. Meter"; Rec."SQ. Meter")
-            {
-                ApplicationArea = All;
-            }
+            //Atul::01122025
+            // field("SQ. Meter"; Rec."SQ. Meter")
+            // {
+            //     ApplicationArea = All;
+            // }
+            //Atul::01122025
             field("Quality Required"; Rec."Quality Required")
             {
                 ApplicationArea = All;
@@ -191,8 +193,11 @@ PageExtension 50045 pageextension70000016 extends "Item List"
             }
         }
     }
-    var ItemCostMgt: Codeunit ItemCostManagement;
-    var AverageCostLCY: Decimal;
-    AverageCostACY: Decimal;
-    UserMgt: Codeunit "SSD User Setup Management";
+    var
+        ItemCostMgt: Codeunit ItemCostManagement;
+
+    var
+        AverageCostLCY: Decimal;
+        AverageCostACY: Decimal;
+        UserMgt: Codeunit "SSD User Setup Management";
 }

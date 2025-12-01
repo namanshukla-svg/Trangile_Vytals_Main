@@ -4,7 +4,7 @@ TableExtension 50082 "SSD Sales Cr.Memo Header" extends "Sales Cr.Memo Header"
     {
         field(50010; "Gate Pass"; Boolean)
         {
-            CalcFormula = exist("SSD Gate Pass Line" where("Invoice No."=field("No.")));
+            CalcFormula = exist("SSD Gate Pass Line" where("Invoice No." = field("No.")));
             Description = 'ALLE-GP001';
             Editable = false;
             FieldClass = FlowField;
@@ -13,12 +13,16 @@ TableExtension 50082 "SSD Sales Cr.Memo Header" extends "Sales Cr.Memo Header"
         field(50011; crminsertflag; Boolean)
         {
             DataClassification = CustomerContent;
-            Caption = 'crminsertflag';
+            //Atul::01122025
+            Caption = 'Insert Status';
+            //Atul::01122025;
         }
         field(50012; isCRMexception; Boolean)
         {
             DataClassification = CustomerContent;
-            Caption = 'isCRMexception';
+            //Atul::01122025
+            Caption = 'Exception Occurred';
+            //Atul::01122025
         }
         field(50013; "exception detail"; Text[200])
         {
@@ -30,7 +34,7 @@ TableExtension 50082 "SSD Sales Cr.Memo Header" extends "Sales Cr.Memo Header"
             DataClassification = CustomerContent;
             Caption = 'GSTR 1 Exported';
         }
-        field(85035; "Type of Invoice";Enum "Type Of Invoice Sales")
+        field(85035; "Type of Invoice"; Enum "Type Of Invoice Sales")
         {
             Caption = 'Type of Invoice';
         }

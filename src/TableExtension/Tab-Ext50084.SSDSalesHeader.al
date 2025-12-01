@@ -89,25 +89,31 @@ tableextension 50084 "SSD Sales Header" extends "Sales Header"
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'crminsertflag';
+            //Atul::01122025
+            Caption = 'Insert Status';
+            //Atul::01122025;
         }
         field(50007; crmupdateflag; Boolean)
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'crmupdateflag';
+            //Atul::01122025
+            Caption = 'Update Status';
+            //Atul::01122025
         }
         field(50008; isCRMexception; Boolean)
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'isCRMexception';
+            //Atul::01122025
+            Caption = 'Exception Occurred';
+            //Atul::01122025
         }
         field(50009; exceptiondetail; Text[190])
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'exceptiondetail';
+            Caption = 'Exception Occurred';
         }
         field(50010; crmRelease; Boolean)
         {

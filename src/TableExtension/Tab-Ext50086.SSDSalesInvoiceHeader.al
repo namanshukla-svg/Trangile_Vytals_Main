@@ -4,39 +4,39 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
     {
         modify("Shipping Agent Code")
         {
-        trigger OnAfterValidate()
-        begin
-            "Actual Shipping Agent code":="Shipping Agent Code";
-        end;
+            trigger OnAfterValidate()
+            begin
+                "Actual Shipping Agent code" := "Shipping Agent Code";
+            end;
         }
         modify("LR/RR No.")
         {
-        trigger OnBeforeValidate()
-        begin
-            IF xRec."LR/RR No." <> '' THEN BEGIN
-                UserSetup.GET("User ID");
-                UserSetup.TESTFIELD("ALLow LR No.");
-                IF "LR/RR No." = '' THEN "LR/RR No.":=xRec."LR/RR No.";
-            END;
-        end;
+            trigger OnBeforeValidate()
+            begin
+                IF xRec."LR/RR No." <> '' THEN BEGIN
+                    UserSetup.GET("User ID");
+                    UserSetup.TESTFIELD("ALLow LR No.");
+                    IF "LR/RR No." = '' THEN "LR/RR No." := xRec."LR/RR No.";
+                END;
+            end;
         }
         modify("LR/RR Date")
         {
-        trigger OnBeforeValidate()
-        begin
-            IF xRec."LR/RR Date" <> 0D THEN BEGIN
-                UserSetup.GET("User ID");
-                UserSetup.TESTFIELD("ALLow LR No.");
-                IF "LR/RR Date" = 0D THEN ERROR('LR No. can not be blank');
-            END;
-            IF NOT("LR/RR Date" >= "Document Date")THEN ERROR('LR/RR date always Greater than or equal to document date');
-        end;
+            trigger OnBeforeValidate()
+            begin
+                IF xRec."LR/RR Date" <> 0D THEN BEGIN
+                    UserSetup.GET("User ID");
+                    UserSetup.TESTFIELD("ALLow LR No.");
+                    IF "LR/RR Date" = 0D THEN ERROR('LR No. can not be blank');
+                END;
+                IF NOT ("LR/RR Date" >= "Document Date") THEN ERROR('LR/RR date always Greater than or equal to document date');
+            end;
         }
         field(50001; "Ref. Doc. Subtype"; Option)
         {
             Description = 'CF002';
             OptionCaption = ' ,Sales Order,Sales Schedule';
-            OptionMembers = " ", "Sales Order", "Sales Schedule";
+            OptionMembers = " ","Sales Order","Sales Schedule";
             DataClassification = CustomerContent;
             Caption = 'Ref. Doc. Subtype';
         }
@@ -62,19 +62,25 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'crminsertflag';
+            //Atul::01122025
+            Caption = 'Insert Status';
+            //Atul::01122025;
         }
         field(50007; crmupdateflag; Boolean)
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'crmupdateflag';
+            //Atul::01122025
+            Caption = 'Update Status';
+            //Atul::01122025
         }
         field(50008; isCRMexception; Boolean)
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'isCRMexception';
+            //Atul::01122025
+            Caption = 'Exception Occurred';
+            //Atul::01122025
         }
         field(50009; "exception detail"; Text[190])
         {
@@ -115,7 +121,7 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
 
             trigger OnValidate()
             begin
-                if not("Actual Delivery Date" >= "LR/RR Date")then Error('Actual Delivery date always greater than LR/RR date');
+                if not ("Actual Delivery Date" >= "LR/RR Date") then Error('Actual Delivery date always greater than LR/RR date');
             end;
         }
         field(50093; "Total Packed Wt."; Decimal)
@@ -163,7 +169,7 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
         {
             Description = 'CF001';
             OptionCaption = ' ,Sales,Contract,Service Contract,Order,Schedule,Invoice,Despatch,Suplementary Invoice';
-            OptionMembers = " ", Sales, Contract, "Service Contract", "Order", Schedule, Invoice, Despatch, "Suplementary Invoice";
+            OptionMembers = " ",Sales,Contract,"Service Contract","Order",Schedule,Invoice,Despatch,"Suplementary Invoice";
             DataClassification = CustomerContent;
             Caption = 'Document Subtype';
         }
@@ -212,7 +218,7 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
         field(53001; "Insurance By"; Option)
         {
             Description = 'CF001';
-            OptionMembers = " ", You, Us;
+            OptionMembers = " ",You,Us;
             DataClassification = CustomerContent;
             Caption = 'Insurance By';
         }
@@ -371,7 +377,7 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
         {
             Caption = 'Insurance';
             Description = 'CF001';
-            OptionMembers = , "Insurance By You", "Insurance By Us";
+            OptionMembers = ,"Insurance By You","Insurance By Us";
             DataClassification = CustomerContent;
         }
         field(53089; "RFQ/Enquiry No"; Code[20])
@@ -459,8 +465,8 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
 
             trigger OnValidate()
             begin
-                "Excise Invoice Date":=WorkDate;
-            //"VAT Form" := 'VAT-D1';
+                "Excise Invoice Date" := WorkDate;
+                //"VAT Form" := 'VAT-D1';
             end;
         }
         field(60006; "DI No."; Code[20])
@@ -496,13 +502,13 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
         {
             Enabled = false;
             OptionCaption = ' ,DI SPARES,ENAGARE';
-            OptionMembers = " ", "DI SPARES", ENAGARE;
+            OptionMembers = " ","DI SPARES",ENAGARE;
             DataClassification = CustomerContent;
             Caption = 'Nagare Item Type';
         }
         field(60043; Supplementary; Boolean)
         {
-            CalcFormula = exist("Sales Invoice Line" where("Document No."=field("No."), Type=filter(Item), "No."=filter('11-FGS-01008')));
+            CalcFormula = exist("Sales Invoice Line" where("Document No." = field("No."), Type = filter(Item), "No." = filter('11-FGS-01008')));
             Description = 'Supplementary';
             FieldClass = FlowField;
             Caption = 'Supplementary';
@@ -593,20 +599,20 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
         field(70000; "Schedule Month"; Option)
         {
             OptionCaption = ', ,JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC';
-            OptionMembers = , JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC;
+            OptionMembers = ,JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC;
             DataClassification = CustomerContent;
             Caption = 'Schedule Month';
         }
         field(70010; Freight; Option)
         {
             OptionCaption = ',Freight Prepaid, Freight Buyer''s Account, Freight Seller''s Account, Freight to be Paid';
-            OptionMembers = , "Freight Prepaid", " Freight Buyer's Account", " Freight Seller's Account", " Freight to be Paid";
+            OptionMembers = ,"Freight Prepaid"," Freight Buyer's Account"," Freight Seller's Account"," Freight to be Paid";
             DataClassification = CustomerContent;
             Caption = 'Freight';
         }
         field(70011; "PF Charges"; Option)
         {
-            OptionMembers = " ", "Inclusive in Price", "Not Inclusive in Price";
+            OptionMembers = " ","Inclusive in Price","Not Inclusive in Price";
             DataClassification = CustomerContent;
             Caption = 'PF Charges';
         }
@@ -684,33 +690,33 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
             Description = 'ALLE 3.24';
             DataClassification = CustomerContent;
             Caption = 'Freight Amount';
-        /* SSD Sunil
-            trigger OnValidate()
-            var
-                SalesInvLine: Record "Sales Invoice Line";
-                TotalWaight: Decimal;
-            begin
-                SalesInvLine.Reset;
-                SalesInvLine.SetRange("Document No.", "No.");
-                TotalWaight := 0;
-                if SalesInvLine.Find('-') then
-                    repeat
-                        TotalWaight += SalesInvLine."Gross Wt";
-                    until SalesInvLine.Next = 0;
+            /* SSD Sunil
+                trigger OnValidate()
+                var
+                    SalesInvLine: Record "Sales Invoice Line";
+                    TotalWaight: Decimal;
+                begin
+                    SalesInvLine.Reset;
+                    SalesInvLine.SetRange("Document No.", "No.");
+                    TotalWaight := 0;
+                    if SalesInvLine.Find('-') then
+                        repeat
+                            TotalWaight += SalesInvLine."Gross Wt";
+                        until SalesInvLine.Next = 0;
 
 
-                SalesInvLine.Reset;
-                SalesInvLine.SetRange("Document No.", "No.");
-                if SalesInvLine.Find('-') then
-                    repeat
-                        if TotalWaight <> 0 then
-                            SalesInvLine."Freight Amount" := ROUND("Freight Amount" * SalesInvLine."Gross Wt" / TotalWaight)
-                        else
-                            SalesInvLine."Freight Amount" := 0;
-                        SalesInvLine.Modify;
-                    until SalesInvLine.Next = 0;
-            end;
-            */
+                    SalesInvLine.Reset;
+                    SalesInvLine.SetRange("Document No.", "No.");
+                    if SalesInvLine.Find('-') then
+                        repeat
+                            if TotalWaight <> 0 then
+                                SalesInvLine."Freight Amount" := ROUND("Freight Amount" * SalesInvLine."Gross Wt" / TotalWaight)
+                            else
+                                SalesInvLine."Freight Amount" := 0;
+                            SalesInvLine.Modify;
+                        until SalesInvLine.Next = 0;
+                end;
+                */
         }
         field(75004; "Customer Transit Form No."; Text[30])
         {
@@ -791,7 +797,7 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
         field(85004; "CT2 Form"; Code[20])
         {
             Description = 'ALLE 3.15';
-            TableRelation = "SSD CT2 Header"."CT2 No." where("CT2 No."=field("CT2 Form"));
+            TableRelation = "SSD CT2 Header"."CT2 No." where("CT2 No." = field("CT2 Form"));
             DataClassification = CustomerContent;
             Caption = 'CT2 Form';
         }
@@ -810,7 +816,7 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
         field(85007; "CT3 Form"; Code[20])
         {
             Description = 'ALLE 3.16';
-            TableRelation = "SSD CT3 Header"."CT3 No." where("Customer No."=field("Sell-to Customer No."));
+            TableRelation = "SSD CT3 Header"."CT3 No." where("Customer No." = field("Sell-to Customer No."));
             DataClassification = CustomerContent;
             Caption = 'CT3 Form';
         }
@@ -848,15 +854,15 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
             Description = 'ALLE[Z]-for qry report purpose';
             DataClassification = CustomerContent;
             Caption = 'Calculated Freight Amount';
-        /*
-            trigger OnValidate()
-            begin
-                //AlleRavik/ZDD/001 Begin
-                Validate("Freight Amount", "Calculated Freight Amount");
-                //Modify;
-                //AlleRavik/ZDD/001 End
-            end;
-            */
+            /*
+                trigger OnValidate()
+                begin
+                    //AlleRavik/ZDD/001 Begin
+                    Validate("Freight Amount", "Calculated Freight Amount");
+                    //Modify;
+                    //AlleRavik/ZDD/001 End
+                end;
+                */
         }
         field(85016; "Actual Shipping Agent code"; Code[10])
         {
@@ -871,7 +877,7 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
         }
         field(85019; "Gate Pass"; Boolean)
         {
-            CalcFormula = exist("SSD Gate Pass Line" where("Invoice No."=field("No.")));
+            CalcFormula = exist("SSD Gate Pass Line" where("Invoice No." = field("No.")));
             Description = 'ALLE-GP001';
             Editable = false;
             FieldClass = FlowField;
@@ -903,7 +909,7 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
         }
         field(85024; "Mail Send Dispatch Detail"; Boolean)
         {
-            CalcFormula = exist("SSD Dispatch Mail Send" where("No."=field("No.")));
+            CalcFormula = exist("SSD Dispatch Mail Send" where("No." = field("No.")));
             Description = 'ALLE 101117';
             FieldClass = FlowField;
             Caption = 'Mail Send Dispatch Detail';
@@ -1005,28 +1011,32 @@ TableExtension 50086 "SSD Sales Invoice Header" extends "Sales Invoice Header"
             DataClassification = CustomerContent;
             Caption = 'Send Mail Again With COA Time';
         }
-        field(85035; "Type of Invoice";Enum "Type Of Invoice Sales")
+        field(85035; "Type of Invoice"; Enum "Type Of Invoice Sales")
         {
             Caption = 'Type of Invoice';
         }
     }
     trigger OnAfterInsert()
     begin
-        crmRelease:=true;
+        crmRelease := true;
     end;
+
     trigger OnAfterModify()
     begin
-        IF crminsertflag = TRUE THEN crmupdateflag:=TRUE;
-        crmRelease:=TRUE;
+        IF crminsertflag = TRUE THEN crmupdateflag := TRUE;
+        crmRelease := TRUE;
     end;
+
     procedure ModifyDispatch(SalesInvoiceHeader: Record "Sales Invoice Header")
     var
         SalesInvoiceHeader2: Record "Sales Invoice Header";
     begin
-        if SalesInvoiceHeader2.Get(SalesInvoiceHeader."No.")then begin
-            SalesInvoiceHeader2."Dispatch Mail Send":=true;
+        if SalesInvoiceHeader2.Get(SalesInvoiceHeader."No.") then begin
+            SalesInvoiceHeader2."Dispatch Mail Send" := true;
             SalesInvoiceHeader2.Modify;
         end;
     end;
-    var UserSetup: Record "User Setup";
+
+    var
+        UserSetup: Record "User Setup";
 }

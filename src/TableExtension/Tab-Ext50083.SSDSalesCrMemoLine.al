@@ -5,12 +5,16 @@ TableExtension 50083 "SSD Sales Cr.Memo Line" extends "Sales Cr.Memo Line"
         field(50005; crminsertflag; Boolean)
         {
             DataClassification = CustomerContent;
-            Caption = 'crminsertflag';
+            //Atul::01122025
+            Caption = 'Insert Status';
+            //Atul::01122025;
         }
         field(50007; isCRMexception; Boolean)
         {
             DataClassification = CustomerContent;
-            Caption = 'isCRMexception';
+            //Atul::01122025
+            Caption = 'Exception Occurred';
+            //Atul::01122025
         }
         field(50008; "exception detail"; Text[200])
         {

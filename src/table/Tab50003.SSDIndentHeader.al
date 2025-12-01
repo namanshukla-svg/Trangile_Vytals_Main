@@ -238,7 +238,7 @@ Table 50003 "SSD Indent Header"
         "Indent Date" := WorkDate;
         IndentSetup.Get;
         if "No." = '' then begin
-            NoSeriesMgt.GetNextNo(GetNoSeriesCode, WorkDate, True);
+            "No." := NoSeriesMgt.GetNextNo(GetNoSeriesCode, WorkDate, True);
         end;
         "Indenter ID" := UserId;
     end;
@@ -267,7 +267,7 @@ Table 50003 "SSD Indent Header"
     procedure AssistEdit(OldIndentHeader: Record "SSD Indent Header"): Boolean
     begin
         if NoSeriesMgt.LookupRelatedNoSeries(GetNoSeriesCode, xRec."No. Series", "No. Series") then begin
-            NoSeriesMgt.GetNextNo("No.");
+            "No." := NoSeriesMgt.GetNextNo("No. Series");
             exit(true);
         end;
     end;

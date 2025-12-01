@@ -19,25 +19,31 @@ TableExtension 50087 "SSD Sales Invoice Line" extends "Sales Invoice Line"
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'crminsertflag';
+            //Atul::01122025
+            Caption = 'Insert Status';
+            //Atul::01122025;
         }
         field(50006; crmupdateflag; Boolean)
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'crmupdateflag';
+            //Atul::01122025
+            Caption = 'Update Status';
+            //Atul::01122025
         }
         field(50007; isCRMexception; Boolean)
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'isCRMexception';
+            //Atul::01122025
+            Caption = 'Exception Occurred';
+            //Atul::01122025
         }
         field(50008; exceptiondetail; Text[200])
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'exceptiondetail';
+            Caption = 'Exception Occurred';
         }
         field(50023; "MRP No."; Code[20])
         {
@@ -53,7 +59,7 @@ TableExtension 50087 "SSD Sales Invoice Line" extends "Sales Invoice Line"
         {
             Description = 'CF001.05 -> Sales Invoice Doc No from where suple. Invoice is copied';
             Editable = false;
-            TableRelation = if("Document Subtype"=const("Suplementary Invoice"))"Sales Invoice Line"."Document No.";
+            TableRelation = if ("Document Subtype" = const("Suplementary Invoice")) "Sales Invoice Line"."Document No.";
             DataClassification = CustomerContent;
             Caption = 'Old Document No.';
         }
@@ -61,7 +67,7 @@ TableExtension 50087 "SSD Sales Invoice Line" extends "Sales Invoice Line"
         {
             Description = 'CF001.05 -> Sales Invoice Line No from where suple. Invoice is copied';
             Editable = false;
-            TableRelation = if("Document Subtype"=const("Suplementary Invoice"))"Sales Invoice Line"."Line No." where("Document No."=field("Old Document No."));
+            TableRelation = if ("Document Subtype" = const("Suplementary Invoice")) "Sales Invoice Line"."Line No." where("Document No." = field("Old Document No."));
             DataClassification = CustomerContent;
             Caption = 'Old Document Line No.';
         }
@@ -85,7 +91,7 @@ TableExtension 50087 "SSD Sales Invoice Line" extends "Sales Invoice Line"
         {
             Description = 'CF001';
             OptionCaption = ' ,Sales,Contract,Service Contract,Order,Schedule,Invoice,Despatch,Suplementary Invoice';
-            OptionMembers = " ", Sales, Contract, "Service Contract", "Order", Schedule, Invoice, Despatch, "Suplementary Invoice";
+            OptionMembers = " ",Sales,Contract,"Service Contract","Order",Schedule,Invoice,Despatch,"Suplementary Invoice";
             DataClassification = CustomerContent;
             Caption = 'Document Subtype';
         }
@@ -186,7 +192,7 @@ TableExtension 50087 "SSD Sales Invoice Line" extends "Sales Invoice Line"
         }
         field(54061; "No of Pack"; Decimal)
         {
-            CalcFormula = lookup("SSD Sales Schedule Buffer"."No. of Box" where("Document Type"=filter(Order|Invoice), "Document No."=field("Pre-Assigned No."), "Sell-to Customer No."=field("Sell-to Customer No."), "Order Line No."=field("Line No."), "Item No."=field("No.")));
+            CalcFormula = lookup("SSD Sales Schedule Buffer"."No. of Box" where("Document Type" = filter(Order | Invoice), "Document No." = field("Pre-Assigned No."), "Sell-to Customer No." = field("Sell-to Customer No."), "Order Line No." = field("Line No."), "Item No." = field("No.")));
             Description = 'CF002 For No of Packet';
             FieldClass = FlowField;
             Caption = 'No of Pack';
@@ -214,7 +220,7 @@ TableExtension 50087 "SSD Sales Invoice Line" extends "Sales Invoice Line"
         }
         field(54070; "Invoicing Date"; Date)
         {
-            CalcFormula = lookup("Sales Invoice Header"."Posting Date" where("No."=field("Document No.")));
+            CalcFormula = lookup("Sales Invoice Header"."Posting Date" where("No." = field("Document No.")));
             FieldClass = FlowField;
             Caption = 'Invoicing Date';
         }
@@ -227,7 +233,7 @@ TableExtension 50087 "SSD Sales Invoice Line" extends "Sales Invoice Line"
         }
         field(54072; "No. 2"; Code[20])
         {
-            CalcFormula = lookup(Item."No. 2" where("No."=field("No.")));
+            CalcFormula = lookup(Item."No. 2" where("No." = field("No.")));
             Description = 'CEN002';
             FieldClass = FlowField;
             Caption = 'No. 2';
@@ -299,7 +305,7 @@ TableExtension 50087 "SSD Sales Invoice Line" extends "Sales Invoice Line"
         field(70000; "Schedule Month"; Option)
         {
             OptionCaption = ', ,JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC';
-            OptionMembers = , " ", JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC;
+            OptionMembers = ," ",JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC;
             DataClassification = CustomerContent;
             Caption = 'Schedule Month';
         }
@@ -478,7 +484,8 @@ TableExtension 50087 "SSD Sales Invoice Line" extends "Sales Invoice Line"
             SumIndexFields = Quantity;
         }
     }
-    var Text037: label 'Despatch No. %1:';
-    Text038: label 'The program cannot find this Sales line.';
-    Text039: label 'You can not have %1 defined in structure for Export Document';
+    var
+        Text037: label 'Despatch No. %1:';
+        Text038: label 'The program cannot find this Sales line.';
+        Text039: label 'You can not have %1 defined in structure for Export Document';
 }

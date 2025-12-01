@@ -12,15 +12,21 @@ table 50138 "SSD Update Item"
         }
         field(6; crminsertflag; Code[20])
         {
-            Caption = 'crminsertflag';
+            //Atul::01122025
+            Caption = 'Insert Status';
+            //Atul::01122025;
         }
         field(7; crmupdateflag; Code[20])
         {
-            Caption = 'crmupdateflag';
+            //Atul::01122025
+            Caption = 'Update Status';
+            //Atul::01122025
         }
         field(8; isCRMexception; Code[20])
         {
-            Caption = 'isCRMexception';
+            //Atul::01122025
+            Caption = 'Exception Occurred';
+            //Atul::01122025
         }
         field(9; crmfgproduct; Code[20])
         {

@@ -136,11 +136,17 @@ PageExtension 50041 "SSD Item Card" extends "Item Card"
             {
                 ApplicationArea = All;
             }
-            field("No. of Price Valadity in Days"; Rec."No. of Price Valadity in Days")
-            {
-                ApplicationArea = All;
-            }
-            group(Control1000000029)
+            //Atul::01122025
+            // field("No. of Price Valadity in Days"; Rec."No. of Price Valadity in Days")
+            // {
+            //     ApplicationArea = All;
+            // }
+            //Atul::01122025
+        }
+        //Atul::01122025
+        addafter(InventoryGrp)
+        {
+            group("CRM Integration")
             {
                 field(crminsertflag; Rec.crminsertflag)
                 {
@@ -160,6 +166,7 @@ PageExtension 50041 "SSD Item Card" extends "Item Card"
                 }
             }
         }
+        //Atul::01122025
         addafter("Sales Unit of Measure")
         {
             field("Lead Time Dispatch"; Rec."Lead Time Dispatch")
@@ -189,10 +196,12 @@ PageExtension 50041 "SSD Item Card" extends "Item Card"
         }
         addafter("Purch. Unit of Measure")
         {
-            field("Self Life"; Rec."Self Life")
-            {
-                ApplicationArea = All;
-            }
+            //Atul::01122025
+            // field("Self Life"; Rec."Self Life")
+            // {
+            //     ApplicationArea = All;
+            // }
+            //Atul::01122025
             field("Hazard material classification"; Rec."Hazard material classification")
             {
                 ApplicationArea = All;
@@ -219,16 +228,20 @@ PageExtension 50041 "SSD Item Card" extends "Item Card"
         }
         addafter("Gross Weight")
         {
-            field("SQ. Meter"; Rec."SQ. Meter")
-            {
-                ApplicationArea = All;
-            }
+            //Atul::01122025
+            // field("SQ. Meter"; Rec."SQ. Meter")
+            // {
+            //     ApplicationArea = All;
+            // }
+            //Atul::01122025
         }
         addafter("Costs & Posting")
         {
             group("HDS Information")
             {
-                Caption = 'HDS Information';
+                // Atul 01122025
+                Caption = 'MSDS Information';
+                // Atul 01122025
 
                 field(PICTOGRAMS; Rec.PICTOGRAMS)
                 {

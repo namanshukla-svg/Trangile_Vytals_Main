@@ -1,14 +1,14 @@
 Page 50012 Indent
 {
     // // CF001 09.01.2006 added for responsibility center
-    DeleteAllowed = false;
+    // DeleteAllowed = false;
     PageType = Document;
     SourceTable = "SSD Indent Header";
     SourceTableView = where("Send Approval" = filter(false));
     PromotedActionCategories = 'New,Process,Report,Approve,Request Approval';
     ApplicationArea = All;
     RefreshOnActivate = true;
-    DelayedInsert = true;
+    // DelayedInsert = true;
 
 
 

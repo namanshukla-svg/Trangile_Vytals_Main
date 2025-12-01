@@ -32,47 +32,47 @@ Table 50047 "SSD Prod Forecast Archive"
         field(5; "Forecast Quantity"; Decimal)
         {
             Caption = 'Forecast Quantity';
-            DecimalPlaces = 0: 5;
+            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
 
             trigger OnValidate()
             begin
-                "Forecast Quantity (Base)":="Forecast Quantity" * "Qty. per Unit of Measure";
+                "Forecast Quantity (Base)" := "Forecast Quantity" * "Qty. per Unit of Measure";
             end;
         }
         field(6; "Unit of Measure Code"; Code[10])
         {
             Caption = 'Unit of Measure Code';
-            TableRelation = "Item Unit of Measure".Code where("Item No."=field("Item No."));
+            TableRelation = "Item Unit of Measure".Code where("Item No." = field("Item No."));
             DataClassification = CustomerContent;
 
             trigger OnValidate()
             begin
                 ItemUnitofMeasure.Get("Item No.", "Unit of Measure Code");
-                "Qty. per Unit of Measure":=ItemUnitofMeasure."Qty. per Unit of Measure";
-                "Forecast Quantity":="Forecast Quantity (Base)" / "Qty. per Unit of Measure";
+                "Qty. per Unit of Measure" := ItemUnitofMeasure."Qty. per Unit of Measure";
+                "Forecast Quantity" := "Forecast Quantity (Base)" / "Qty. per Unit of Measure";
             end;
         }
         field(7; "Qty. per Unit of Measure"; Decimal)
         {
             Caption = 'Qty. per Unit of Measure';
-            DecimalPlaces = 0: 5;
+            DecimalPlaces = 0 : 5;
             Editable = false;
             DataClassification = CustomerContent;
         }
         field(8; "Forecast Quantity (Base)"; Decimal)
         {
             Caption = 'Forecast Quantity (Base)';
-            DecimalPlaces = 0: 5;
+            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
 
             trigger OnValidate()
             begin
                 if "Unit of Measure Code" = '' then begin
                     Item.Get("Item No.");
-                    "Unit of Measure Code":=Item."Sales Unit of Measure";
+                    "Unit of Measure Code" := Item."Sales Unit of Measure";
                     ItemUnitofMeasure.Get("Item No.", "Unit of Measure Code");
-                    "Qty. per Unit of Measure":=ItemUnitofMeasure."Qty. per Unit of Measure";
+                    "Qty. per Unit of Measure" := ItemUnitofMeasure."Qty. per Unit of Measure";
                 end;
                 Validate("Unit of Measure Code");
             end;
@@ -126,12 +126,16 @@ Table 50047 "SSD Prod Forecast Archive"
         field(20; ISCRMException; Boolean)
         {
             DataClassification = CustomerContent;
-            Caption = 'ISCRMException';
+            //Atul::01122025
+            Caption = 'Exception Occurred';
+            //Atul::01122025
         }
         field(21; ExceptionDetails; Text[30])
         {
             DataClassification = CustomerContent;
-            Caption = 'ExceptionDetails';
+            //Atul::01122025
+            Caption = 'Exception Details';
+            //Atul::01122025
         }
         field(22; "Suggested Order Date"; Date)
         {
@@ -159,7 +163,7 @@ Table 50047 "SSD Prod Forecast Archive"
                 Customer: Record Customer;
             begin
                 Customer.Reset;
-                if Customer.Get("Customer Code")then "Customer Name":=Customer.Name;
+                if Customer.Get("Customer Code") then "Customer Name" := Customer.Name;
             end;
         }
         field(26; "Customer Name"; Text[100])
@@ -196,14 +200,17 @@ Table 50047 "SSD Prod Forecast Archive"
         TestField("Forecast Date");
         TestField("Production Forecast Name");
         LockTable;
-        if "Entry No." = 0 then if ForecastEntry.FindLast then "Entry No.":=ForecastEntry."Entry No." + 1;
+        if "Entry No." = 0 then if ForecastEntry.FindLast then "Entry No." := ForecastEntry."Entry No." + 1;
         PlanningAssignment.AssignOne("Item No.", '', "Location Code", "Forecast Date");
     end;
+
     trigger OnModify()
     begin
         PlanningAssignment.AssignOne("Item No.", '', "Location Code", "Forecast Date");
     end;
-    var ItemUnitofMeasure: Record "Item Unit of Measure";
-    Item: Record Item;
-    PlanningAssignment: Record "Planning Assignment";
+
+    var
+        ItemUnitofMeasure: Record "Item Unit of Measure";
+        Item: Record Item;
+        PlanningAssignment: Record "Planning Assignment";
 }

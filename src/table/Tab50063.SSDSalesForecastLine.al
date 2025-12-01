@@ -24,7 +24,7 @@ Table 50063 "SSD Sales Forecast Line"
             begin
                 SalesForecastHeader.Reset;
                 SalesForecastHeader.SetRange(SalesForecastHeader."Sales Planning No.", "Sales Document No.");
-                if SalesForecastHeader.FindFirst then "Customer Code":=SalesForecastHeader."Customer No.";
+                if SalesForecastHeader.FindFirst then "Customer Code" := SalesForecastHeader."Customer No.";
             end;
         }
         field(4; "Item Code"; Code[20])
@@ -38,25 +38,27 @@ Table 50063 "SSD Sales Forecast Line"
                 Item.Get("Item Code");
                 Customer.Get("Customer Code");
                 //SSD "Lead Time Dispatch" := Item."Lead Time Dispatch";
-                "Shipping Time":=Customer."Shipping Time";
-                "Item Name":=Item.Description + ',' + Item."Description 2";
+                "Shipping Time" := Customer."Shipping Time";
+                "Item Name" := Item.Description + ',' + Item."Description 2";
                 //SSD "Pack Size" := Item."Pack Size";
                 MiniStockforCustForecast.Reset;
                 //SSD MiniStockforCustForecast.SetRange("Customer No.", Rec."Customer Code");
                 MiniStockforCustForecast.SetRange("Item Code", Rec."Item Code");
-                if MiniStockforCustForecast.FindFirst then "Minimum Stock Level":=MiniStockforCustForecast."Minimum Stock Level";
+                if MiniStockforCustForecast.FindFirst then "Minimum Stock Level" := MiniStockforCustForecast."Minimum Stock Level";
                 Clear("Shipped Qty Intransit");
                 SIH.Reset;
                 SIH.SetRange("Sell-to Customer No.", "Customer Code");
                 SIH.SetRange("Actual Delivery Date", 0D);
                 SIH.SetFilter("Posting Date", '>=%1', "Opening Stock Date");
-                if SIH.FindSet then repeat SalesInvoiceLine.Reset;
+                if SIH.FindSet then
+                    repeat
+                        SalesInvoiceLine.Reset;
                         SalesInvoiceLine.SetRange("Document No.", SIH."No.");
                         SalesInvoiceLine.SetRange("No.", Rec."Item Code");
                         SalesInvoiceLine.SetRange(Type, SalesInvoiceLine.Type::Item);
                         if SalesInvoiceLine.FindSet then begin
                             SalesInvoiceLine.CalcSums(Quantity);
-                            "Shipped Qty Intransit"+=SalesInvoiceLine.Quantity;
+                            "Shipped Qty Intransit" += SalesInvoiceLine.Quantity;
                         end;
                     until SIH.Next = 0;
                 Clear("SO Qty (Remaining)");
@@ -65,14 +67,16 @@ Table 50063 "SSD Sales Forecast Line"
                 SalesHeader.SetRange("Sell-to Customer No.", "Customer Code");
                 //SalesHeader.SETFILTER("Actual Delivery Date",'<>%1',0D);
                 SalesHeader.SetFilter("Posting Date", '>=%1', "Opening Stock Date");
-                if SalesHeader.FindSet then repeat SalesLine.Reset;
+                if SalesHeader.FindSet then
+                    repeat
+                        SalesLine.Reset;
                         SalesLine.SetRange("Document No.", SalesHeader."No.");
                         SalesLine.SetRange("Document Type", SalesHeader."Document Type");
                         SalesLine.SetFilter("Outstanding Quantity", '<>%1', 0);
                         SalesLine.SetRange("No.", Rec."Item Code");
                         if SalesLine.FindSet then begin
                             //SalesLine.CALCSUMS("Qty. to Ship");
-                            "SO Qty (Remaining)"+=SalesLine."Outstanding Quantity";
+                            "SO Qty (Remaining)" += SalesLine."Outstanding Quantity";
                         end;
                     until SalesHeader.Next = 0;
                 Clear("SP Sold Qty.");
@@ -80,13 +84,15 @@ Table 50063 "SSD Sales Forecast Line"
                 SIH.SetRange("Sell-to Customer No.", "Customer Code");
                 SIH.SetFilter("Actual Delivery Date", '<>%1', 0D);
                 SIH.SetFilter("Posting Date", '>=%1', "Opening Stock Date");
-                if SIH.FindSet then repeat SalesInvoiceLine.Reset;
+                if SIH.FindSet then
+                    repeat
+                        SalesInvoiceLine.Reset;
                         SalesInvoiceLine.SetRange("Document No.", SIH."No.");
                         SalesInvoiceLine.SetRange("No.", Rec."Item Code");
                         SalesInvoiceLine.SetRange(Type, SalesInvoiceLine.Type::Item);
                         if SalesInvoiceLine.FindSet then begin
                             SalesInvoiceLine.CalcSums(Quantity);
-                            "SP Sold Qty."+=SalesInvoiceLine.Quantity;
+                            "SP Sold Qty." += SalesInvoiceLine.Quantity;
                         end;
                     until SIH.Next = 0;
                 Validate(Stock);
@@ -94,8 +100,8 @@ Table 50063 "SSD Sales Forecast Line"
                 Validate("SO Qty (Remaining)");
                 Validate("Shipped Qty Intransit");
                 Validate("Minimum Stock Level");
-            //"Expected Receipt Date" := CALCDATE("Lead Time Dispatch",Date);
-            //"Expected Receipt Date" := CALCDATE("Shipping Time","Expected Receipt Date");
+                //"Expected Receipt Date" := CALCDATE("Lead Time Dispatch",Date);
+                //"Expected Receipt Date" := CALCDATE("Shipping Time","Expected Receipt Date");
             end;
         }
         field(5; "Lead Time Dispatch"; DateFormula)
@@ -106,15 +112,18 @@ Table 50063 "SSD Sales Forecast Line"
             trigger OnValidate()
             begin
                 Evaluate(Text1, Format("Lead Time Dispatch"));
-                Var2:=StrLen(Text1);
-                Var1:=CopyStr(Text1, Var2, Var2);
-                Var3:=CopyStr(Text1, 1, Var2 - 1);
+                Var2 := StrLen(Text1);
+                Var1 := CopyStr(Text1, Var2, Var2);
+                Var3 := CopyStr(Text1, 1, Var2 - 1);
                 Evaluate(Int1, Var3);
-                if Var1 = 'D' then "Lead Time In Days":=Int1 * 1
-                else if Var1 = 'M' then "Lead Time In Days":=Int1 * 30
-                    else if Var1 = 'Q' then "Lead Time In Days":=Int1 * 90
-                        else
-                            "Lead Time In Days":=Int1 * 7;
+                if Var1 = 'D' then
+                    "Lead Time In Days" := Int1 * 1
+                else if Var1 = 'M' then
+                    "Lead Time In Days" := Int1 * 30
+                else if Var1 = 'Q' then
+                    "Lead Time In Days" := Int1 * 90
+                else
+                    "Lead Time In Days" := Int1 * 7;
             end;
         }
         field(6; "Shipping Time"; DateFormula)
@@ -125,15 +134,18 @@ Table 50063 "SSD Sales Forecast Line"
             trigger OnValidate()
             begin
                 Evaluate(Text1, Format("Shipping Time"));
-                Var2:=StrLen(Text1);
-                Var1:=CopyStr(Text1, Var2, Var2);
-                Var3:=CopyStr(Text1, 1, Var2 - 1);
+                Var2 := StrLen(Text1);
+                Var1 := CopyStr(Text1, Var2, Var2);
+                Var3 := CopyStr(Text1, 1, Var2 - 1);
                 Evaluate(Int1, Var3);
-                if Var1 = 'D' then "Shipping Time In Days":=Int1 * 1
-                else if Var1 = 'M' then "Shipping Time In Days":=Int1 * 30
-                    else if Var1 = 'Q' then "Shipping Time In Days":=Int1 * 90
-                        else
-                            "Shipping Time In Days":=Int1 * 7;
+                if Var1 = 'D' then
+                    "Shipping Time In Days" := Int1 * 1
+                else if Var1 = 'M' then
+                    "Shipping Time In Days" := Int1 * 30
+                else if Var1 = 'Q' then
+                    "Shipping Time In Days" := Int1 * 90
+                else
+                    "Shipping Time In Days" := Int1 * 7;
             end;
         }
         field(7; "Item Name"; Text[80])
@@ -159,8 +171,8 @@ Table 50063 "SSD Sales Forecast Line"
 
             trigger OnValidate()
             begin
-                Stock:=(("Opending Stock" - "SSR for Specific Period") + "SP Sold Qty.");
-                "Cal Suggested Dealer PO Qty":=("Forecast Quantity" + "Minimum Stock Level") - (Stock + "SO Qty (Remaining)" + "Shipped Qty Intransit");
+                Stock := (("Opending Stock" - "SSR for Specific Period") + "SP Sold Qty.");
+                "Cal Suggested Dealer PO Qty" := ("Forecast Quantity" + "Minimum Stock Level") - (Stock + "SO Qty (Remaining)" + "Shipped Qty Intransit");
             end;
         }
         field(10; "Forecast Quantity"; Decimal)
@@ -170,7 +182,7 @@ Table 50063 "SSD Sales Forecast Line"
 
             trigger OnValidate()
             begin
-                "Cal Suggested Dealer PO Qty":=("Forecast Quantity" + "Minimum Stock Level") - (Stock + "SO Qty (Remaining)" + "Shipped Qty Intransit");
+                "Cal Suggested Dealer PO Qty" := ("Forecast Quantity" + "Minimum Stock Level") - (Stock + "SO Qty (Remaining)" + "Shipped Qty Intransit");
             end;
         }
         field(11; "SO Qty (Remaining)"; Decimal)
@@ -180,7 +192,7 @@ Table 50063 "SSD Sales Forecast Line"
 
             trigger OnValidate()
             begin
-                "Cal Suggested Dealer PO Qty":=("Forecast Quantity" + "Minimum Stock Level") - (Stock + "SO Qty (Remaining)" + "Shipped Qty Intransit");
+                "Cal Suggested Dealer PO Qty" := ("Forecast Quantity" + "Minimum Stock Level") - (Stock + "SO Qty (Remaining)" + "Shipped Qty Intransit");
             end;
         }
         field(12; "Shipped Qty Intransit"; Decimal)
@@ -191,7 +203,7 @@ Table 50063 "SSD Sales Forecast Line"
 
             trigger OnValidate()
             begin
-                "Cal Suggested Dealer PO Qty":=("Forecast Quantity" + "Minimum Stock Level") - (Stock + "SO Qty (Remaining)" + "Shipped Qty Intransit");
+                "Cal Suggested Dealer PO Qty" := ("Forecast Quantity" + "Minimum Stock Level") - (Stock + "SO Qty (Remaining)" + "Shipped Qty Intransit");
             end;
         }
         field(13; "Minimum Stock Level"; Decimal)
@@ -201,7 +213,7 @@ Table 50063 "SSD Sales Forecast Line"
 
             trigger OnValidate()
             begin
-                "Cal Suggested Dealer PO Qty":=("Forecast Quantity" + "Minimum Stock Level") - (Stock + "SO Qty (Remaining)" + "Shipped Qty Intransit");
+                "Cal Suggested Dealer PO Qty" := ("Forecast Quantity" + "Minimum Stock Level") - (Stock + "SO Qty (Remaining)" + "Shipped Qty Intransit");
             end;
         }
         field(14; "Cal Suggested Dealer PO Qty"; Decimal)
@@ -211,7 +223,7 @@ Table 50063 "SSD Sales Forecast Line"
 
             trigger OnValidate()
             begin
-                "Cal Suggested Dealer PO Qty":=("Forecast Quantity" + "Minimum Stock Level") - (Stock + "SO Qty (Remaining)" + "Shipped Qty Intransit");
+                "Cal Suggested Dealer PO Qty" := ("Forecast Quantity" + "Minimum Stock Level") - (Stock + "SO Qty (Remaining)" + "Shipped Qty Intransit");
             end;
         }
         field(15; "Act Suggested Dealer PO Qty"; Decimal)
@@ -292,12 +304,14 @@ Table 50063 "SSD Sales Forecast Line"
         field(27; ISCRMException; Boolean)
         {
             DataClassification = CustomerContent;
-            Caption = 'ISCRMException';
+            //Atul::01122025
+            Caption = 'Exception Occurred';
+            //Atul::01122025
         }
         field(28; ExceptionDetails; Text[30])
         {
             DataClassification = CustomerContent;
-            Caption = 'ExceptionDetails';
+            Caption = 'Exception Details';
         }
         field(29; "Lead Time In Days"; Integer)
         {
@@ -319,7 +333,7 @@ Table 50063 "SSD Sales Forecast Line"
             begin
                 Validate("Item Code");
                 Validate(Stock, (("Opending Stock" - "SSR for Specific Period") + "SP Sold Qty."));
-                "Cal Suggested Dealer PO Qty":=("Forecast Quantity" + "Minimum Stock Level") - (Stock + "SO Qty (Remaining)" + "Shipped Qty Intransit");
+                "Cal Suggested Dealer PO Qty" := ("Forecast Quantity" + "Minimum Stock Level") - (Stock + "SO Qty (Remaining)" + "Shipped Qty Intransit");
                 Validate("Forecast Quantity");
             end;
         }
@@ -339,22 +353,24 @@ Table 50063 "SSD Sales Forecast Line"
         SalesForecastHeader.Reset;
         SalesForecastHeader.SetRange(SalesForecastHeader."Sales Planning No.", "Sales Document No.");
         if SalesForecastHeader.FindFirst then begin
-            "Customer Code":=SalesForecastHeader."Customer No.";
-            Date:=SalesForecastHeader.Date;
+            "Customer Code" := SalesForecastHeader."Customer No.";
+            Date := SalesForecastHeader.Date;
         end;
     end;
-    var SalesForecastHeader: Record "SSD Sales Forecast Header";
-    Item: Record Item;
-    Customer: Record Customer;
-    SalesHeader: Record "Sales Header";
-    SalesLine: Record "Sales Line";
-    Date1: Text;
-    SIH: Record "Sales Invoice Header";
-    SalesInvoiceLine: Record "Sales Invoice Line";
-    MiniStockforCustForecast: Record "SSD Pre. Prod. Forecast Entry";
-    Var1: Text;
-    Var2: Integer;
-    Var3: Text;
-    Text1: Text;
-    Int1: Integer;
+
+    var
+        SalesForecastHeader: Record "SSD Sales Forecast Header";
+        Item: Record Item;
+        Customer: Record Customer;
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        Date1: Text;
+        SIH: Record "Sales Invoice Header";
+        SalesInvoiceLine: Record "Sales Invoice Line";
+        MiniStockforCustForecast: Record "SSD Pre. Prod. Forecast Entry";
+        Var1: Text;
+        Var2: Integer;
+        Var3: Text;
+        Text1: Text;
+        Int1: Integer;
 }

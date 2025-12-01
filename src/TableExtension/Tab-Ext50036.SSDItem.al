@@ -267,25 +267,31 @@ TableExtension 50036 "SSD Item" extends Item
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'crminsertflag';
+            //Atul::01122025
+            Caption = 'Insert Status';
+            //Atul::01122025
         }
         field(50062; crmupdateflag; Boolean)
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'crmupdateflag';
+            //Atul::01122025
+            Caption = 'Update Status';
+            //Atul::01122025
         }
         field(50063; isCRMexception; Boolean)
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'isCRMexception';
+            //Atul::01122025
+            Caption = 'Exception Occurred';
+            //Atul::01122025
         }
         field(50064; exceptionDetail; Text[200])
         {
             Description = 'TRI';
             DataClassification = CustomerContent;
-            Caption = 'exceptionDetail';
+            Caption = 'Exception Occurred';
         }
         field(50065; "Temp Product ID"; Text[30])
         {
@@ -342,7 +348,9 @@ TableExtension 50036 "SSD Item" extends Item
         {
             OptionMembers = " ",PACK,"DRUM & CAN","OTHER CON",MAINTCON,LABCON,"BASE OIL","SPECIALITY CHEM","SPECIALITY CHEM - DOM",SOLVENT,"KRAFT PAPER",DESSICANT,"PE FILM & LAMINATION","HD LAMINATION",AEROSOL,DISINFCTNT,HAKUPUR,HAKUFORM,"NEAT OIL",NIKUTEX,CONTROX,ISOGOL,HC360,FORMING,"SUMP CARE";
             DataClassification = CustomerContent;
-            Caption = 'Purchase Group 1';
+            // Atul 01122025
+            Caption = 'Purchase Type';
+            // Atul 01122025s
 
             trigger OnValidate()
             begin
@@ -353,8 +361,9 @@ TableExtension 50036 "SSD Item" extends Item
         {
             OptionMembers = " ",Budgeted,"Non-Budgeted";
             DataClassification = CustomerContent;
-            Caption = 'Purchase Group 2';
-
+            // Atul 01122025
+            Caption = 'Budget Status';
+            // Atul 01122025
             trigger OnValidate()
             begin
                 //Blocked :=TRUE; //Alle 07122021
@@ -362,9 +371,12 @@ TableExtension 50036 "SSD Item" extends Item
         }
         field(50086; "Purchase Group 3"; Option)
         {
-            OptionMembers = " ","Non-G/L","G/L";
+            // Atul 01122025
+            OptionMembers = " ","No","Yes";
             DataClassification = CustomerContent;
-            Caption = 'Purchase Group 3';
+
+            Caption = 'Part of the BOM';
+            // Atul 01122025
 
             trigger OnValidate()
             begin
@@ -542,14 +554,16 @@ TableExtension 50036 "SSD Item" extends Item
                     "Lead time in days" := Int1 * 7;
             end;
         }
-        field(75001; "Self Life"; Option)
-        {
-            Description = 'ALLE 6.01';
-            OptionCaption = ' ,1 Month, 3 Month , 6 Month, 12 Month, Indefinite';
-            OptionMembers = " ","1 Month"," 3 Month "," 6 Month"," 12 Month"," Indefinite";
-            DataClassification = CustomerContent;
-            Caption = 'Self Life';
-        }
+        // Atul 01122025
+        // field(75001; "Self Life"; Option)
+        // {
+        //     Description = 'ALLE 6.01';
+        //     OptionCaption = ' ,1 Month, 3 Month , 6 Month, 12 Month, Indefinite';
+        //     OptionMembers = " ","1 Month"," 3 Month "," 6 Month"," 12 Month"," Indefinite";
+        //     DataClassification = CustomerContent;
+        //     Caption = 'Self Life';
+        // }
+        // Atul 01122025
         field(75002; "Hazard material classification"; Option)
         {
             Description = 'ALLE 6.01';
@@ -575,13 +589,15 @@ TableExtension 50036 "SSD Item" extends Item
             DataClassification = CustomerContent;
             Caption = 'Deviation %';
         }
-        field(75006; "SQ. Meter"; Decimal)
-        {
-            DecimalPlaces = 2 : 5;
-            Description = 'Alle VPB (Asked for Reporting Purpose)';
-            DataClassification = CustomerContent;
-            Caption = 'SQ. Meter';
-        }
+        //Atul::01122025
+        // field(75006; "SQ. Meter"; Decimal)
+        // {
+        //     DecimalPlaces = 2 : 5;
+        //     Description = 'Alle VPB (Asked for Reporting Purpose)';
+        //     DataClassification = CustomerContent;
+        //     Caption = 'SQ. Meter';
+        // }
+        //Atul::01122025
         field(75007; "Allow Shipping Variance"; Boolean)
         {
             Description = 'ALLE[551]';
@@ -602,12 +618,14 @@ TableExtension 50036 "SSD Item" extends Item
             DataClassification = CustomerContent;
             Caption = 'Avg. Unit Cost 14_15';
         }
-        field(75010; "No. of Price Valadity in Days"; Code[10])
-        {
-            Description = '//Alle';
-            DataClassification = CustomerContent;
-            Caption = 'No. of Price Valadity in Days';
-        }
+        //Atul::01122025
+        // field(75010; "No. of Price Valadity in Days"; Code[10])
+        // {
+        //     Description = '//Alle';
+        //     DataClassification = CustomerContent;
+        //     Caption = 'No. of Price Valadity in Days';
+        // }
+        //Atul::01122025
         field(75020; "Cost Amount Actual"; Decimal)
         {
             AutoFormatType = 1;

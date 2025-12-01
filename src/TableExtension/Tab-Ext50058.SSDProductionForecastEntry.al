@@ -13,7 +13,7 @@ TableExtension 50058 "SSD Production Forecast Entry" extends "Production Forecas
                 Customer: Record Customer;
             begin
                 Customer.Reset;
-                if Customer.Get("Customer Code")then "Customer Name":=Customer.Name;
+                if Customer.Get("Customer Code") then "Customer Name" := Customer.Name;
             end;
         }
         field(50001; "Customer Name"; Text[100])
@@ -54,12 +54,16 @@ TableExtension 50058 "SSD Production Forecast Entry" extends "Production Forecas
         field(50008; ISCRMException; Boolean)
         {
             DataClassification = CustomerContent;
-            Caption = 'ISCRMException';
+            //Atul::01122025
+            Caption = 'Exception Occurred';
+            //Atul::01122025
         }
         field(50009; ExceptionDetails; Text[30])
         {
             DataClassification = CustomerContent;
-            Caption = 'ExceptionDetails';
+            //Atul::01122025
+            Caption = 'Exception Details';
+            //Atul::01122025
         }
         field(50010; "Suggested Order Date"; Date)
         {
