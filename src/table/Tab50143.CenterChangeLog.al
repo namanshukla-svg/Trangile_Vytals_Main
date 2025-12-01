@@ -1,3 +1,4 @@
+// Atul::01122025
 table 50143 "Center Change Log"
 {
     Caption = 'Machine Center/Work Center Change Log List';
@@ -68,4 +69,5 @@ table 50143 "Center Change Log"
         end;
     end;
 }
+// Atul::01122025
 
