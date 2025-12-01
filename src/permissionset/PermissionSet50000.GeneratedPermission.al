@@ -1147,5 +1147,11 @@ permissionset 50000 GeneratedPermission
         report "East Flash Query N" = X,
         report "North Flash Query N" = X,
         report "South Flash Query N" = X,
-        report "West Flash Query N" = X;
+        report "West Flash Query N" = X,
+        tabledata "Center Change Log" = RIMD,
+        table "Center Change Log" = X,
+        report "OTIF SO Report" = X,
+        report "Update Inventory" = X,
+        codeunit "WorkCenter Block Subscriber" = X,
+        page "Center Change Log List" = X;
 }

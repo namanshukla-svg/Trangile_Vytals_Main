@@ -2,6 +2,7 @@ Report 55004 "Label - 175 * 220 IG"
 {
     DefaultLayout = RDLC;
     RDLCLayout = './Layouts/Label - 175  220_IG.rdl';
+    ApplicationArea = All;
     // ApplicationArea = all;
     // UsageCategory = ReportsAndAnalysis;
 

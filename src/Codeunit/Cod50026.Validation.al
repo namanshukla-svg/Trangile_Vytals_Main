@@ -5,13 +5,24 @@ codeunit 50026 Validation
         tabledata "Sales Invoice Header" = rm,
         tabledata "Cust. Ledger Entry" = rm;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforePostSalesDoc', '', false, false)]
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", OnBeforePostSalesDoc, '', false, false)]
     procedure OnBeforePostSalesDoc(var SalesHeader: Record "Sales Header")
     var
         SalesLine: Record "Sales Line";
         HeaderDim: array[8] of code[20];
         UserSetup: Record "User Setup";
+        MsgTxt: Text;
     begin
+        //Atul::01122025
+        if SalesHeader."Posting Date" <> WorkDate then begin
+            MsgTxt :=
+               'Posting Date (%1) is not equal to Work Date (%2). Do you want to continue Posting?';
+
+            if not Confirm(StrSubstNo(MsgTxt, SalesHeader."Posting Date", WorkDate), false) then begin
+                Error('Posting cancelled by user.');
+            end;
+        end;
+        //Atul::01122025
         SalesLine.SetRange("Document Type", SalesHeader."Document Type");
         SalesLine.SetRange("Document No.", SalesHeader."No.");
         SalesLine.SetFilter("No.", '<>%1', '');
@@ -23,6 +34,22 @@ codeunit 50026 Validation
         UserSetup.Get(UserId);
         // SalesHeader.TestField("Type of Invoice", UserSetup."Type of Invoice");//IG_AS 18-07-2025
     end;
+    //Atul::01122025 start
+    [EventSubscriber(ObjectType::Page, Page::"Material Receipt Note", OnBeforeMaterialReceiptPost, '', false, false)]
+    local procedure OnBeforeMaterialReceiptPost(var WarehouseReceiptHeader: Record "Warehouse Receipt Header")
+    var
+        MsgTxt: Text;
+    begin
+        if WarehouseReceiptHeader."Posting Date" <> WorkDate then begin
+            MsgTxt :=
+               'Posting Date (%1) is not equal to Work Date (%2). Do you want to continue Posting?';
+
+            if not Confirm(StrSubstNo(MsgTxt, WarehouseReceiptHeader."Posting Date", WorkDate), false) then begin
+                Error('Posting cancelled by user.');
+            end;
+        end;
+    end;
+    //Atul::01122025 End;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostInvoice', '', false, false)]
     local procedure PostPurchaseNarr(var PurchHeader: Record "Purchase Header"; var VendorLedgerEntry: Record "Vendor Ledger Entry")
@@ -215,5 +242,8 @@ codeunit 50026 Validation
                 end;
         end;
     end;
+
+
+
     ///////
 }

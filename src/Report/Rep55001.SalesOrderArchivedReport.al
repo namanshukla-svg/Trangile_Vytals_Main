@@ -6,6 +6,7 @@ report 55001 "Sales Order Archived Report"
     DefaultLayout = RDLC;
     RDLCLayout = './Layouts/Sales Order Archived.rdl';
     Caption = 'Sales Order Archived Report';
+    ApplicationArea = All;
     // UsageCategory = ReportsandAnalysis;
     // ApplicationArea = all;
 

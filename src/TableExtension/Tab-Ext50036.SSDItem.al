@@ -348,9 +348,9 @@ TableExtension 50036 "SSD Item" extends Item
         {
             OptionMembers = " ",PACK,"DRUM & CAN","OTHER CON",MAINTCON,LABCON,"BASE OIL","SPECIALITY CHEM","SPECIALITY CHEM - DOM",SOLVENT,"KRAFT PAPER",DESSICANT,"PE FILM & LAMINATION","HD LAMINATION",AEROSOL,DISINFCTNT,HAKUPUR,HAKUFORM,"NEAT OIL",NIKUTEX,CONTROX,ISOGOL,HC360,FORMING,"SUMP CARE";
             DataClassification = CustomerContent;
-            // Atul 01122025
+            // Atul 01122025 Start
             Caption = 'Purchase Type';
-            // Atul 01122025s
+            // Atul 01122025 End
 
             trigger OnValidate()
             begin
@@ -361,22 +361,23 @@ TableExtension 50036 "SSD Item" extends Item
         {
             OptionMembers = " ",Budgeted,"Non-Budgeted";
             DataClassification = CustomerContent;
-            // Atul 01122025
+            // Atul 01122025 Start
             Caption = 'Budget Status';
-            // Atul 01122025
+            // Atul 01122025 End
             trigger OnValidate()
+            var
+                ff: page 18605;
             begin
                 //Blocked :=TRUE; //Alle 07122021
             end;
         }
         field(50086; "Purchase Group 3"; Option)
         {
-            // Atul 01122025
+            // Atul 01122025 Start
             OptionMembers = " ","No","Yes";
             DataClassification = CustomerContent;
-
             Caption = 'Part of the BOM';
-            // Atul 01122025
+            // Atul 01122025 End
 
             trigger OnValidate()
             begin
@@ -554,7 +555,7 @@ TableExtension 50036 "SSD Item" extends Item
                     "Lead time in days" := Int1 * 7;
             end;
         }
-        // Atul 01122025
+        // Atul 01122025 Start >>Commented
         // field(75001; "Self Life"; Option)
         // {
         //     Description = 'ALLE 6.01';
@@ -563,7 +564,7 @@ TableExtension 50036 "SSD Item" extends Item
         //     DataClassification = CustomerContent;
         //     Caption = 'Self Life';
         // }
-        // Atul 01122025
+        // Atul 01122025 End 
         field(75002; "Hazard material classification"; Option)
         {
             Description = 'ALLE 6.01';

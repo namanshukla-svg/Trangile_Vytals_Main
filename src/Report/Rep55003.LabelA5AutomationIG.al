@@ -3,6 +3,7 @@ Report 55003 "Label - A5 Automation IG"
     DefaultLayout = RDLC;
     RDLCLayout = './Layouts/Label - A5Automation_IG.rdl';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
     // ApplicationArea = all;
     // UsageCategory = ReportsAndAnalysis;
 

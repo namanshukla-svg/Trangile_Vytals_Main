@@ -9,6 +9,7 @@ page 50357 "SSD Service Receipt"
     SourceTable = "Purchase Header";
     SourceTableView = where("Document Type" = filter(Order), Status = const(Released));
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

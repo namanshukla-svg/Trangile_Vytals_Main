@@ -439,10 +439,22 @@ codeunit 50138 "SSD Purchase Subscribers"
 
     [EventSubscriber(ObjectType::codeunit, Codeunit::"Purch.-Post", 'OnBeforePostPurchaseDoc', '', false, false)]
     local procedure SSDOnBeforePostPurchaseDoc(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean)
+    var
+        MsgTxt: Text;
     begin
         if PurchaseHeader."Document Type" <> PurchaseHeader."Document Type"::"Return Order" then exit;
-        if PreviewMode then exit;
+        if PreviewMode then
+            exit;
         Error('Posting Not Allowed! Use credit memo.');
+        //Atul::01122025
+        if PurchaseHeader."Posting Date" <> WorkDate then begin
+            MsgTxt :=
+               'Posting Date (%1) is not equal to Work Date (%2). Do you want to continue Posting?';
+
+            if not Confirm(StrSubstNo(MsgTxt, PurchaseHeader."Posting Date", WorkDate), false) then
+                Error('Posting cancelled by user.');
+        end;
+        //Atul::01122025
     end;
 
     [EventSubscriber(ObjectType::codeunit, Codeunit::"Purch.-Post", 'OnInsertReceiptLineOnBeforeCreatePostedRcptLine', '', false, false)]
@@ -1145,4 +1157,13 @@ codeunit 50138 "SSD Purchase Subscribers"
                 end;
         end;
     end;
+
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"TransferOrder-Post Shipment", OnBeforeTransferOrderPostShipment, '', false, false)]
+    // local procedure OnBeforeTransferOrderPostShipment(var TransferHeader: Record "Transfer Header"; var CommitIsSuppressed: Boolean; PreviewMode: Boolean)
+    // var
+    //     MsgTxt: Text;
+    // begin
+
+    // end;
+
 }

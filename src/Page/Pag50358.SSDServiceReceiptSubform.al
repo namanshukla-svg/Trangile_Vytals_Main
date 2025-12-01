@@ -6,7 +6,8 @@ page 50358 "SSD Service Receipt Subform"
     DeleteAllowed = false;
     PageType = ListPart;
     SourceTable = "Purchase Line";
-    SourceTableView = where("Document Type"=filter(Order));
+    SourceTableView = where("Document Type" = filter(Order));
+    ApplicationArea = All;
 
     layout
     {
@@ -198,7 +199,7 @@ page 50358 "SSD Service Receipt Subform"
                 {
                     ApplicationArea = Dimensions;
                     CaptionClass = '1,2,3';
-                    TableRelation = "Dimension Value".Code where("Global Dimension No."=const(3), "Dimension Value Type"=const(Standard), Blocked=const(false));
+                    TableRelation = "Dimension Value".Code where("Global Dimension No." = const(3), "Dimension Value Type" = const(Standard), Blocked = const(false));
                     Visible = DimVisible3;
                     ToolTip = 'Specifies the value of the ShortcutDimCode[3] field.';
 
@@ -211,7 +212,7 @@ page 50358 "SSD Service Receipt Subform"
                 {
                     ApplicationArea = Dimensions;
                     CaptionClass = '1,2,4';
-                    TableRelation = "Dimension Value".Code where("Global Dimension No."=const(4), "Dimension Value Type"=const(Standard), Blocked=const(false));
+                    TableRelation = "Dimension Value".Code where("Global Dimension No." = const(4), "Dimension Value Type" = const(Standard), Blocked = const(false));
                     Visible = DimVisible4;
                     ToolTip = 'Specifies the value of the ShortcutDimCode[4] field.';
 
@@ -224,7 +225,7 @@ page 50358 "SSD Service Receipt Subform"
                 {
                     ApplicationArea = Dimensions;
                     CaptionClass = '1,2,5';
-                    TableRelation = "Dimension Value".Code where("Global Dimension No."=const(5), "Dimension Value Type"=const(Standard), Blocked=const(false));
+                    TableRelation = "Dimension Value".Code where("Global Dimension No." = const(5), "Dimension Value Type" = const(Standard), Blocked = const(false));
                     Visible = DimVisible5;
                     ToolTip = 'Specifies the value of the ShortcutDimCode[5] field.';
 
@@ -237,7 +238,7 @@ page 50358 "SSD Service Receipt Subform"
                 {
                     ApplicationArea = Dimensions;
                     CaptionClass = '1,2,6';
-                    TableRelation = "Dimension Value".Code where("Global Dimension No."=const(6), "Dimension Value Type"=const(Standard), Blocked=const(false));
+                    TableRelation = "Dimension Value".Code where("Global Dimension No." = const(6), "Dimension Value Type" = const(Standard), Blocked = const(false));
                     Visible = DimVisible6;
                     ToolTip = 'Specifies the value of the ShortcutDimCode[6] field.';
 
@@ -250,7 +251,7 @@ page 50358 "SSD Service Receipt Subform"
                 {
                     ApplicationArea = Dimensions;
                     CaptionClass = '1,2,7';
-                    TableRelation = "Dimension Value".Code where("Global Dimension No."=const(7), "Dimension Value Type"=const(Standard), Blocked=const(false));
+                    TableRelation = "Dimension Value".Code where("Global Dimension No." = const(7), "Dimension Value Type" = const(Standard), Blocked = const(false));
                     Visible = DimVisible7;
                     ToolTip = 'Specifies the value of the ShortcutDimCode[7] field.';
 
@@ -263,7 +264,7 @@ page 50358 "SSD Service Receipt Subform"
                 {
                     ApplicationArea = Dimensions;
                     CaptionClass = '1,2,8';
-                    TableRelation = "Dimension Value".Code where("Global Dimension No."=const(8), "Dimension Value Type"=const(Standard), Blocked=const(false));
+                    TableRelation = "Dimension Value".Code where("Global Dimension No." = const(8), "Dimension Value Type" = const(Standard), Blocked = const(false));
                     Visible = DimVisible8;
                     ToolTip = 'Specifies the value of the ShortcutDimCode[8] field.';
 
@@ -286,7 +287,7 @@ page 50358 "SSD Service Receipt Subform"
 
                 action(ItemChargeAssignment)
                 {
-                    AccessByPermission = TableData "Item Charge"=R;
+                    AccessByPermission = TableData "Item Charge" = R;
                     ApplicationArea = ItemCharges;
                     Caption = 'Item Charge &Assignment';
                     Image = ItemCosts;
@@ -306,36 +307,43 @@ page 50358 "SSD Service Receipt Subform"
     begin
         SetItemChargeFieldsStyle();
     end;
+
     trigger OnAfterGetRecord()
     begin
         Rec.ShowShortcutDimCode(ShortcutDimCode);
         SetItemChargeFieldsStyle();
     end;
-    trigger OnDeleteRecord(): Boolean begin
+
+    trigger OnDeleteRecord(): Boolean
+    begin
         Error('');
     end;
+
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
         Rec.InitType();
         Clear(ShortcutDimCode);
     end;
+
     trigger OnOpenPage()
     begin
         SetDimensionsVisibility();
     end;
-    var ItemChargeStyleExpression: Text;
-    ItemChargeToHandleStyleExpression: Text;
-    ShortcutDimCode: array[8]of Code[20];
-    DimVisible1: Boolean;
-    DimVisible2: Boolean;
-    DimVisible3: Boolean;
-    DimVisible4: Boolean;
-    DimVisible5: Boolean;
-    DimVisible6: Boolean;
-    DimVisible7: Boolean;
-    DimVisible8: Boolean;
-    IsBlankNumber: Boolean;
-    IsCommentLine: Boolean;
+
+    var
+        ItemChargeStyleExpression: Text;
+        ItemChargeToHandleStyleExpression: Text;
+        ShortcutDimCode: array[8] of Code[20];
+        DimVisible1: Boolean;
+        DimVisible2: Boolean;
+        DimVisible3: Boolean;
+        DimVisible4: Boolean;
+        DimVisible5: Boolean;
+        DimVisible6: Boolean;
+        DimVisible7: Boolean;
+        DimVisible8: Boolean;
+        IsBlankNumber: Boolean;
+        IsCommentLine: Boolean;
     /// <summary>
     /// UpdateForm.
     /// </summary>
@@ -344,27 +352,29 @@ page 50358 "SSD Service Receipt Subform"
     begin
         CurrPage.Update(SetSaveRecord);
     end;
+
     local procedure SetItemChargeFieldsStyle()
     begin
-        ItemChargeStyleExpression:='';
-        ItemChargeToHandleStyleExpression:='';
-        if Rec.AssignedItemCharge()then begin
-            if Rec."Qty. To Assign" <> (Rec.Quantity - Rec."Qty. Assigned")then ItemChargeStyleExpression:='Unfavorable';
-            if Rec."Item Charge Qty. to Handle" <> Rec."Qty. to Invoice" then ItemChargeToHandleStyleExpression:='Unfavorable';
+        ItemChargeStyleExpression := '';
+        ItemChargeToHandleStyleExpression := '';
+        if Rec.AssignedItemCharge() then begin
+            if Rec."Qty. To Assign" <> (Rec.Quantity - Rec."Qty. Assigned") then ItemChargeStyleExpression := 'Unfavorable';
+            if Rec."Item Charge Qty. to Handle" <> Rec."Qty. to Invoice" then ItemChargeToHandleStyleExpression := 'Unfavorable';
         end;
     end;
+
     local procedure SetDimensionsVisibility()
     var
         DimensionManagement: Codeunit DimensionManagement;
     begin
-        DimVisible1:=false;
-        DimVisible2:=false;
-        DimVisible3:=false;
-        DimVisible4:=false;
-        DimVisible5:=false;
-        DimVisible6:=false;
-        DimVisible7:=false;
-        DimVisible8:=false;
+        DimVisible1 := false;
+        DimVisible2 := false;
+        DimVisible3 := false;
+        DimVisible4 := false;
+        DimVisible5 := false;
+        DimVisible6 := false;
+        DimVisible7 := false;
+        DimVisible8 := false;
         DimensionManagement.UseShortcutDims(DimVisible1, DimVisible2, DimVisible3, DimVisible4, DimVisible5, DimVisible6, DimVisible7, DimVisible8);
         Clear(DimensionManagement);
     end;

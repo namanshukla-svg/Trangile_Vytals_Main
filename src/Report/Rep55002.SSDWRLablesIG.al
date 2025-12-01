@@ -4,6 +4,7 @@ report 55002 "SSD WR Lables IG"
     WordMergeDataItem = "Warehouse Receipt Header";
     //IG_DS UsageCategory = ReportsAndAnalysis;
     RDLCLayout = './Layouts/WR_Labels_IG.rdl';
+    ApplicationArea = All;
     //IG_DS ApplicationArea = All;
 
     dataset

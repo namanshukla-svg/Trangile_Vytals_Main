@@ -2,11 +2,12 @@ Report 50145 "Hold Payment"
 {
     DefaultLayout = RDLC;
     RDLCLayout = './Layouts/Hold Payment.rdl';
-    Permissions = TableData "Vendor Ledger Entry"=rm,
-        TableData "Purch. Rcpt. Header"=rm,
-        TableData "Purch. Rcpt. Line"=rm,
-        TableData "Purch. Inv. Header"=rm,
-        TableData "Purch. Inv. Line"=rm;
+    Permissions = TableData "Vendor Ledger Entry" = rm,
+        TableData "Purch. Rcpt. Header" = rm,
+        TableData "Purch. Rcpt. Line" = rm,
+        TableData "Purch. Inv. Header" = rm,
+        TableData "Purch. Inv. Line" = rm;
+    ApplicationArea = All;
 
     dataset
     {
@@ -40,24 +41,25 @@ Report 50145 "Hold Payment"
         //         PurchRcptLine."Hold Payment" := true;
         //         PurchRcptLine.Modify;
         PurchInvHeader2.Get(PurchInvHeader."No.");
-        PurchInvHeader2."Hold Payment":=true;
+        PurchInvHeader2."Hold Payment" := true;
         PurchInvHeader2.Modify;
         PurchInvLine.Reset;
         PurchInvLine.SetRange("Document No.", PurchInvHeader."No.");
         if PurchInvLine.FindSet then begin
             //repeat
             PurchInvLine.ModifyAll("Hold Payment", true);
-        //until PurchInvLine.Next = 0;
+            //until PurchInvLine.Next = 0;
         end;
         VendLedEntry.SetRange("Document Type", VendLedEntry."document type"::Invoice);
         VendLedEntry.SetRange("Document No.", PurchInvHeader."No.");
         if VendLedEntry.FindFirst then begin
-            VendLedEntry."Hold Payment":=true;
-            VendLedEntry."On Hold":='Hol';
+            VendLedEntry."Hold Payment" := true;
+            VendLedEntry."On Hold" := 'Hol';
             VendLedEntry.Modify;
         end;
         Message(MSG, PurchInvHeader."No.");
     end;
+
     procedure UnHoldPayment(var PurchInvHeader: Record "Purch. Inv. Header")
     var
         PurchRcptLine: Record "Purch. Rcpt. Line";
@@ -75,20 +77,20 @@ Report 50145 "Hold Payment"
         //         PurchRcptLine."Hold Payment" := false;
         //         PurchRcptLine.Modify;
         PurchInvHeader2.Get(PurchInvHeader."No.");
-        PurchInvHeader2."Hold Payment":=false;
+        PurchInvHeader2."Hold Payment" := false;
         PurchInvHeader2.Modify;
         PurchInvLine.Reset;
         PurchInvLine.SetRange("Document No.", PurchInvHeader."No.");
         if PurchInvLine.FindSet then begin
             //repeat
             PurchInvLine.ModifyAll("Hold Payment", false);
-        //until PurchInvLine.Next = 0;
+            //until PurchInvLine.Next = 0;
         end;
         VendLedEntry.SetRange("Document Type", VendLedEntry."document type"::Invoice);
         VendLedEntry.SetRange("Document No.", PurchInvHeader."No.");
         if VendLedEntry.FindFirst then begin
-            VendLedEntry."Hold Payment":=false;
-            VendLedEntry."On Hold":='';
+            VendLedEntry."Hold Payment" := false;
+            VendLedEntry."On Hold" := '';
             VendLedEntry.Modify;
         end;
         Message(MSG, PurchInvHeader."No.");

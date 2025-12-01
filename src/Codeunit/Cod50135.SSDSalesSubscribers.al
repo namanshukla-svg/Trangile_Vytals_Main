@@ -548,7 +548,8 @@ codeunit 50135 "SSD Sales Subscribers"
         Slinerec.SETRANGE("Document No.", SalesHeader."No.");
         Slinerec.SETFILTER("No.", '<>%1', '');
         Slinerec.SetRange("Unit Price", 0);
-        if Slinerec.FindSet() then Error(Text50001);
+        if Slinerec.FindSet() then
+            Error(Text50001);
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Invoice then //SSDU_Sunil
             if (SalesHeader."Type of Invoice") in [SalesHeader."Type of Invoice"::Normal, SalesHeader."Type of Invoice"::Commercial, SalesHeader."Type of Invoice"::Amazon] then SalesHeader.TESTFIELD("Expected Delivery Date");
         IF (SalesHeader."GST Customer Type" = SalesHeader."GST Customer Type"::Export) OR (SalesHeader."GST Customer Type" = SalesHeader."GST Customer Type"::"SEZ Unit") THEN BEGIN

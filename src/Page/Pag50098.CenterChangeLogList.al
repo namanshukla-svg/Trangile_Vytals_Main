@@ -1,4 +1,4 @@
-// Atul::01122025
+// Atul::01122025 Start
 page 50098 "Center Change Log List"
 {
     PageType = List;
@@ -44,4 +44,4 @@ page 50098 "Center Change Log List"
         }
     }
 }
-// Atul::01122025
+// Atul::01122025 End

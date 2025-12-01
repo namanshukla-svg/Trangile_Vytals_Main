@@ -2,6 +2,7 @@ Report 50277 "Mail Send for COA"
 {
     Permissions = TableData "Sales Invoice Header" = rm;
     ProcessingOnly = true;
+    ApplicationArea = All;
 
     dataset
     {

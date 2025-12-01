@@ -63,6 +63,7 @@ report 55015 "Update Inventory"
             {
                 action(LayoutName)
                 {
+                    ApplicationArea = all;
 
                 }
             }

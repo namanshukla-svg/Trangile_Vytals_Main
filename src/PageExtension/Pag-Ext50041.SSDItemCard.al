@@ -239,9 +239,9 @@ PageExtension 50041 "SSD Item Card" extends "Item Card"
         {
             group("HDS Information")
             {
-                // Atul 01122025
+                // Atul 01122025 Start
                 Caption = 'MSDS Information';
-                // Atul 01122025
+                // Atul 01122025 End
 
                 field(PICTOGRAMS; Rec.PICTOGRAMS)
                 {

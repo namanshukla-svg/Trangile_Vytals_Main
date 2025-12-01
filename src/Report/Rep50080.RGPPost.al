@@ -103,8 +103,9 @@ Report 50080 "RGP Post"
         RgpOutBnd: Boolean;
 
     procedure PostRGP(var RGPHead: Record "SSD RGP Header")
+    var
+        MsgTxt: Text;
     begin
-        RGPHeader.Copy(RGPHead);
         RGPHeader.TestField(Status, RGPHeader.Status::Released);
         if DateNotAllowed(RGPHeader."Posting Date") then RGPHeader.FieldError("Posting Date", Text005);
         RGPSetup.Get;
@@ -133,6 +134,15 @@ Report 50080 "RGP Post"
                 end;
             RGPHeader."document type"::"RGP Inbound":
                 begin
+                    RGPHeader.Copy(RGPHead);
+                    // Atul::01122025 Start
+                    if RGPHeader."Posting Date" <> WorkDate then begin
+                        MsgTxt :=
+                           'Posting Date (%1) is not equal to Work Date (%2). Do you want to continue Posting?';
+                        if not Confirm(StrSubstNo(MsgTxt, RGPHeader."Posting Date", WorkDate), false) then
+                            Error('Posting cancelled by user.');
+                    end;
+                    // Atul::01122025 End
                     //ALLEAA SUBCONMRN 310308 Start >>
                     if RGPHeader.NRGP then begin
                         //ALLEAA CML-033 230408 Start >>

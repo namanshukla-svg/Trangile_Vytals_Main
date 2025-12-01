@@ -7,8 +7,9 @@ page 50362 "SSD Post Service Receipt"
     InsertAllowed = false;
     //ModifyAllowed = false;
     SourceTable = "Purchase Header";
-    SourceTableView = where("Document Type"=filter(Order), Status=const(Released));
+    SourceTableView = where("Document Type" = filter(Order), Status = const(Released));
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {
@@ -114,7 +115,7 @@ page 50362 "SSD Post Service Receipt"
                 ApplicationArea = Suite;
                 Editable = IsPurchaseLinesEditable;
                 Enabled = IsPurchaseLinesEditable;
-                SubPageLink = "Document No."=field("No.");
+                SubPageLink = "Document No." = field("No.");
                 UpdatePropagation = Both;
             }
         }
@@ -124,7 +125,7 @@ page 50362 "SSD Post Service Receipt"
             {
                 ApplicationArea = All;
                 Caption = 'Attachments';
-                SubPageLink = "Table ID"=const(Database::"SSD Purchase Attachment"), "No."=field("No."), "Document Type"=field("Document Type");
+                SubPageLink = "Table ID" = const(Database::"SSD Purchase Attachment"), "No." = field("No."), "Document Type" = field("Document Type");
             }
         }
     }
@@ -145,87 +146,100 @@ page 50362 "SSD Post Service Receipt"
                     Image = DocumentEdit;
                     ToolTip = 'Executes the Fill Checklist action.';
                     RunObject = Page "SSD PO Checklist";
-                    RunPageLink = "Document Type"=field("Document Type"), "Document No."=field("No.");
+                    RunPageLink = "Document Type" = field("Document Type"), "Document No." = field("No.");
                 }
             }
-        // group("P&osting")
-        // {
-        //     Caption = 'P&osting';
-        //     Image = Post;
-        //     action(Post)
-        //     {
-        //         ApplicationArea = Suite;
-        //         Caption = 'P&ost';
-        //         Ellipsis = true;
-        //         Image = PostOrder;
-        //         //Visible = false;
-        //         //ShortCutKey = 'F9';
-        //         ToolTip = 'Finalize the document or journal by posting the amounts and quantities to the related accounts in your company books.';
-        //         trigger OnAction()
-        //         begin
-        //             PostDocument(CODEUNIT::"SSD Purchase Post");
-        //         end;
-        //     }
-        // }
+            // group("P&osting")
+            // {
+            //     Caption = 'P&osting';
+            //     Image = Post;
+            //     action(Post)
+            //     {
+            //         ApplicationArea = Suite;
+            //         Caption = 'P&ost';
+            //         Ellipsis = true;
+            //         Image = PostOrder;
+            //         //Visible = false;
+            //         //ShortCutKey = 'F9';
+            //         ToolTip = 'Finalize the document or journal by posting the amounts and quantities to the related accounts in your company books.';
+            //         trigger OnAction()
+            //         begin
+            //             PostDocument(CODEUNIT::"SSD Purchase Post");
+            //         end;
+            //     }
+            // }
         }
     }
     trigger OnAfterGetCurrRecord()
     begin
-        StatusStyleTxt:=Rec.GetStatusStyleText();
+        StatusStyleTxt := Rec.GetStatusStyleText();
     end;
+
     trigger OnAfterGetRecord()
     begin
         ShowOverReceiptNotification();
         BuyFromContact.GetOrClear(Rec."Buy-from Contact No.");
         PayToContact.GetOrClear(Rec."Pay-to Contact No.");
     end;
-    trigger OnDeleteRecord(): Boolean begin
+
+    trigger OnDeleteRecord(): Boolean
+    begin
         CurrPage.SaveRecord();
         exit(Rec.ConfirmDeletion());
     end;
+
     trigger OnInit()
     begin
         SetExtDocNoMandatoryCondition();
     end;
+
     trigger OnNewRecord(BelowxRec: Boolean)
     var
         LookupStateManager: Codeunit "Lookup State Manager";
     begin
-        if LookupStateManager.IsRecordSaved()then LookupStateManager.ClearSavedRecord();
-        Rec."Responsibility Center":=UserSetupManagement.GetPurchasesFilter();
-        if(not DocNoVisible) and (Rec."No." = '')then begin
+        if LookupStateManager.IsRecordSaved() then LookupStateManager.ClearSavedRecord();
+        Rec."Responsibility Center" := UserSetupManagement.GetPurchasesFilter();
+        if (not DocNoVisible) and (Rec."No." = '') then begin
             Rec.SetBuyFromVendorFromFilter();
             Rec.SelectDefaultRemitAddress(Rec);
         end;
     end;
-    trigger OnInsertRecord(BelowxRec: Boolean): Boolean begin
+
+    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
+    begin
         CurrPage.Update(false);
     end;
+
     trigger OnOpenPage()
     begin
         SetOpenPage();
         ActivateFields();
     end;
-    var BuyFromContact: Record Contact;
-    PayToContact: Record Contact;
-    PurchasesPayablesSetup: Record "Purchases & Payables Setup";
-    GeneralLedgerSetup: Record "General Ledger Setup";
-    UserSetupManagement: Codeunit "User Setup Management";
-    SSDTCManagement: Codeunit "SSD TC Management";
-    StatusStyleTxt: Text;
-    DocNoVisible: Boolean;
-    VendorInvoiceNoMandatory: Boolean;
-    IsPurchaseLinesEditable: Boolean;
+
+    var
+        BuyFromContact: Record Contact;
+        PayToContact: Record Contact;
+        PurchasesPayablesSetup: Record "Purchases & Payables Setup";
+        GeneralLedgerSetup: Record "General Ledger Setup";
+        UserSetupManagement: Codeunit "User Setup Management";
+        SSDTCManagement: Codeunit "SSD TC Management";
+        StatusStyleTxt: Text;
+        DocNoVisible: Boolean;
+        VendorInvoiceNoMandatory: Boolean;
+        IsPurchaseLinesEditable: Boolean;
+
     local procedure SetOpenPage()
     begin
         Rec.SetSecurityFilterOnRespCenter();
         Rec.SetRange("Date Filter", 0D, WorkDate());
     end;
+
     local procedure ActivateFields()
     begin
         GeneralLedgerSetup.Get();
-        IsPurchaseLinesEditable:=Rec.PurchaseLinesEditable();
+        IsPurchaseLinesEditable := Rec.PurchaseLinesEditable();
     end;
+
     local procedure PostDocument(PostingCodeunitID: Integer)
     var
         LinesInstructionMgt: Codeunit "Lines Instruction Mgt.";
@@ -234,11 +248,13 @@ page 50362 "SSD Post Service Receipt"
         Rec.SendToPosting(PostingCodeunitID);
         CurrPage.Update(false);
     end;
+
     local procedure SetExtDocNoMandatoryCondition()
     begin
         PurchasesPayablesSetup.GetRecordOnce();
-        VendorInvoiceNoMandatory:=PurchasesPayablesSetup."Ext. Doc. No. Mandatory";
+        VendorInvoiceNoMandatory := PurchasesPayablesSetup."Ext. Doc. No. Mandatory";
     end;
+
     local procedure ShowOverReceiptNotification()
     var
         OverReceiptMgt: Codeunit "Over-Receipt Mgt.";

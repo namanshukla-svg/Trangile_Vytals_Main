@@ -3,6 +3,7 @@ Report 55005 "Label - 3 * 2 IG"
     DefaultLayout = RDLC;
     RDLCLayout = './Layouts/Label - 3  2_IG.rdl';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
     // ApplicationArea = all;
     // UsageCategory = ReportsAndAnalysis;
 

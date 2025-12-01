@@ -11,6 +11,7 @@ Page 50247 "Posted Sales  Invoice List"
     RefreshOnActivate = true;
     SourceTable = "Sales Invoice Header";
     UsageCategory = Tasks;
+    ApplicationArea = All;
 
     //ApplicationArea = All;
     layout

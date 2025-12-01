@@ -9,7 +9,7 @@ Page 50095 "Material Receipt Note"
     // ALLE-HG-field added
     Caption = 'Material Receipt Note';
     PageType = Document;
-    Permissions = TableData "SSD Quality Setup"=ri;
+    Permissions = TableData "SSD Quality Setup" = ri;
     PopulateAllFields = true;
     RefreshOnActivate = true;
     SourceTable = "Warehouse Receipt Header";
@@ -33,17 +33,18 @@ Page 50095 "Material Receipt Note"
 
                     trigger OnAssistEdit()
                     begin
-                        if Rec.AssistEdit(xRec)then CurrPage.Update;
+                        if Rec.AssistEdit(xRec) then CurrPage.Update;
                     end;
                 }
                 field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = All;
 
-                    trigger OnLookup(var Text: Text): Boolean begin
+                    trigger OnLookup(var Text: Text): Boolean
+                    begin
                         //CurrForm.SAVERECORD;
                         Rec.LookupLocation(Rec);
-                    //CurrForm.UPDATE(TRUE);
+                        //CurrForm.UPDATE(TRUE);
                     end;
                 }
                 field("Bin Code"; Rec."Bin Code")
@@ -134,7 +135,7 @@ Page 50095 "Material Receipt Note"
             }
             part(WhseReceiptLines; "Material Receipt Note Subform")
             {
-                SubPageLink = "No."=field("No.");
+                SubPageLink = "No." = field("No.");
                 SubPageView = sorting("No.", "Sorting Sequence No.");
                 ApplicationArea = All;
             }
@@ -168,7 +169,7 @@ Page 50095 "Material Receipt Note"
                     Caption = 'Co&mments';
                     Image = ViewComments;
                     RunObject = Page "Warehouse Comment Sheet";
-                    RunPageLink = "Table Name"=const("Whse. Receipt"), Type=const(" "), "No."=field("No.");
+                    RunPageLink = "Table Name" = const("Whse. Receipt"), Type = const(" "), "No." = field("No.");
                 }
                 separator(Action1000000004)
                 {
@@ -179,7 +180,7 @@ Page 50095 "Material Receipt Note"
                     Caption = 'Posted &Whse. Receipts';
                     Image = PostedReceipts;
                     RunObject = Page "Posted Whse. Receipt List";
-                    RunPageLink = "Whse. Receipt No."=field("No.");
+                    RunPageLink = "Whse. Receipt No." = field("No.");
                     RunPageView = sorting("Whse. Receipt No.");
                 }
                 action("Posted Gate Entry")
@@ -199,13 +200,15 @@ Page 50095 "Material Receipt Note"
                         WHReceiptLineLocal.Reset;
                         WHReceiptLineLocal.SetRange("No.", Rec."No.");
                         WHReceiptLineLocal.SetRange("Location Code", Rec."Location Code");
-                        if WHReceiptLineLocal.Find('-')then repeat PostedGateHeaderLocal.Get(WHReceiptLineLocal."Gate Entry no.");
+                        if WHReceiptLineLocal.Find('-') then
+                            repeat
+                                PostedGateHeaderLocal.Get(WHReceiptLineLocal."Gate Entry no.");
                                 PostedGateHeaderLocal.Mark(true);
                             until WHReceiptLineLocal.Next = 0;
                         PostedGateHeaderLocal.MarkedOnly(true);
                         FrmPostedGateInList.SetTableview(PostedGateHeaderLocal);
                         FrmPostedGateInList.RunModal;
-                    //CF001 St
+                        //CF001 St
                     end;
                 }
             }
@@ -229,7 +232,7 @@ Page 50095 "Material Receipt Note"
                         GetSourceDocInbound: Codeunit "Get Source Doc. Inbound";
                     begin
                         GetSourceDocInbound.GetInboundDocs(Rec);
-                        Rec."Document Status":=Rec.GetHeaderStatus(0);
+                        Rec."Document Status" := Rec.GetHeaderStatus(0);
                         Rec.Modify;
                     end;
                 }
@@ -247,7 +250,7 @@ Page 50095 "Material Receipt Note"
                         GetSourceDocInbound: Codeunit "Get Source Doc. Inbound";
                     begin
                         GetSourceDocInbound.GetSingleInboundDoc(Rec);
-                        Rec."Document Status":=Rec.GetHeaderStatus(0);
+                        Rec."Document Status" := Rec.GetHeaderStatus(0);
                         Rec.Modify;
                     end;
                 }
@@ -276,9 +279,9 @@ Page 50095 "Material Receipt Note"
                     trigger OnAction()
                     var
                         WHReceiptLineLocal: Record "Warehouse Receipt Line";
-                        SourceTypeLocal: Option Purchase, Manufacturing, Routing, MRN;
+                        SourceTypeLocal: Option Purchase,Manufacturing,Routing,MRN;
                         QualityManagement: Codeunit "Quality Management";
-                        TemplateTypeLocal: Option Receipt, Manufacturing, Routing;
+                        TemplateTypeLocal: Option Receipt,Manufacturing,Routing;
                         Lines: Integer;
                         SetupQuality: Record "SSD Quality Setup";
                         ItemLocal: Record Item;
@@ -292,28 +295,30 @@ Page 50095 "Material Receipt Note"
                         OnBeforeCreateQualityOrder(Rec, IsHandled);
                         if IsHandled then exit;
                         //CORP::PK 290619 >>>
-                        if Location.Get(Rec."Location Code")then;
+                        if Location.Get(Rec."Location Code") then;
                         WarehouseReceiptLine.Reset;
                         WarehouseReceiptLine.SetRange("No.", Rec."No.");
-                        if WarehouseReceiptLine.FindSet then repeat if Item.Get(WarehouseReceiptLine."Item No.")then;
-                                if(Location."Phy. Bin Required") and (Item."Phy. Bin Required")then begin
+                        if WarehouseReceiptLine.FindSet then
+                            repeat
+                                if Item.Get(WarehouseReceiptLine."Item No.") then;
+                                if (Location."Phy. Bin Required") and (Item."Phy. Bin Required") then begin
                                     ItemPhyBinDetails.Reset;
                                     ItemPhyBinDetails.SetRange("Document No.", WarehouseReceiptLine."No.");
                                     ItemPhyBinDetails.SetRange("Document Line No.", WarehouseReceiptLine."Line No.");
-                                    if not ItemPhyBinDetails.FindFirst then Error('Please fill Item Phy. Bin Details')
-                                    else
-                                    begin
-                                        ItemPhyBinDetails."Posting Date":=Rec."Posting Date";
+                                    if not ItemPhyBinDetails.FindFirst then
+                                        Error('Please fill Item Phy. Bin Details')
+                                    else begin
+                                        ItemPhyBinDetails."Posting Date" := Rec."Posting Date";
                                         ItemPhyBinDetails.Modify;
                                     end;
                                 end;
                             until WarehouseReceiptLine.Next = 0;
                         //CORP::PK 290619 <<<
                         if Rec.Blocked = true then Error(TXT0006);
-                        Lines:=0;
-                        if not SetupQuality.Get(UserMgt.GetRespCenterFilter)then begin
+                        Lines := 0;
+                        if not SetupQuality.Get(UserMgt.GetRespCenterFilter) then begin
                             SetupQuality.Init;
-                            SetupQuality."Responsibility Center":=UserMgt.GetRespCenterFilter;
+                            SetupQuality."Responsibility Center" := UserMgt.GetRespCenterFilter;
                         end;
                         if not SetupQuality."Activate Quality Control Man." then Error(Text003);
                         WHReceiptLineLocal.Reset;
@@ -321,7 +326,7 @@ Page 50095 "Material Receipt Note"
                         WHReceiptLineLocal.SetRange("Quality Required", true);
                         WHReceiptLineLocal.SetRange("Send For Quality", false);
                         WHReceiptLineLocal.SetFilter("Actual Qty. to Receive", '<>%1', 0);
-                        if WHReceiptLineLocal.Find('-')then begin
+                        if WHReceiptLineLocal.Find('-') then begin
                             repeat //**** Checking For Lot No ***********************
                                 ItemLocal.Get(WHReceiptLineLocal."Item No.");
                                 if ItemLocal."Item Tracking Code" <> '' then begin
@@ -333,19 +338,19 @@ Page 50095 "Material Receipt Note"
                                     ReservationEntry.SetRange("Source Ref. No.", WHReceiptLineLocal."Source Line No.");
                                     ReservationEntry.SetFilter("Item Tracking", '%1|%2|%3|%4', ReservationEntry."Item Tracking"::"Lot No.", ReservationEntry."Item Tracking"::"Lot and Package No.", ReservationEntry."Item Tracking"::"Lot and Serial and Package No.", ReservationEntry."Item Tracking"::"Lot and Serial No.");
                                     if not ReservationEntry.FindFirst then begin
-                                        ItemTrackingExist:=false;
+                                        ItemTrackingExist := false;
                                         Error(Text0008, WHReceiptLineLocal."Item No.");
                                     end
                                     else
-                                        ItemTrackingExist:=true;
+                                        ItemTrackingExist := true;
                                 end;
                                 //ALLE VIJ
-                                if Confirm(Text0009, true)then begin
+                                if Confirm(Text0009, true) then begin
                                     if ItemTrackingExist then QualityManagement.CreateReceiptQualityOrder(Recsourcetype::Purchase, WHReceiptLineLocal, Rectemplatetype::Receipt, Lines);
                                 end;
                             until WHReceiptLineLocal.Next = 0;
                             Message(Text002, Lines);
-                            Rec."Create DateTime":=CurrentDatetime; //Alle-mk add
+                            Rec."Create DateTime" := CurrentDatetime; //Alle-mk add
                         end
                         else
                             Message(Text001);
@@ -366,7 +371,7 @@ Page 50095 "Material Receipt Note"
                             BarcodeReceipt.SetTableview(ReservationEntry1);
                             BarcodeReceipt.RunModal;
                         end;
-                    // >>>> ALLE[5.51]
+                        // >>>> ALLE[5.51]
                     end;
                 }
             }
@@ -396,19 +401,21 @@ Page 50095 "Material Receipt Note"
                         if Rec.Blocked = true then Error(TXT0006);
                         //********CEN001   Ankit **********
                         //CORP::PK 290619 >>>
-                        if Location.Get(Rec."Location Code")then;
+                        if Location.Get(Rec."Location Code") then;
                         WarehouseReceiptLine.Reset;
                         WarehouseReceiptLine.SetRange("No.", Rec."No.");
                         WarehouseReceiptLine.SetRange("Source Document", WarehouseReceiptLine."Source Document");
-                        if WarehouseReceiptLine.FindSet then repeat if Item.Get(WarehouseReceiptLine."Item No.")then;
-                                if(Location."Phy. Bin Required") and (Item."Phy. Bin Required")then begin
+                        if WarehouseReceiptLine.FindSet then
+                            repeat
+                                if Item.Get(WarehouseReceiptLine."Item No.") then;
+                                if (Location."Phy. Bin Required") and (Item."Phy. Bin Required") then begin
                                     ItemPhyBinDetails.Reset;
                                     ItemPhyBinDetails.SetRange("Document No.", WarehouseReceiptLine."No.");
                                     ItemPhyBinDetails.SetRange("Document Line No.", WarehouseReceiptLine."Line No.");
-                                    if not ItemPhyBinDetails.FindFirst then Error('Please fill Item Phy. Bin Details')
-                                    else
-                                    begin
-                                        ItemPhyBinDetails."Posting Date":=Rec."Posting Date";
+                                    if not ItemPhyBinDetails.FindFirst then
+                                        Error('Please fill Item Phy. Bin Details')
+                                    else begin
+                                        ItemPhyBinDetails."Posting Date" := Rec."Posting Date";
                                         ItemPhyBinDetails.Modify;
                                     end;
                                 end;
@@ -422,7 +429,9 @@ Page 50095 "Material Receipt Note"
                         //ALLEAA CML-033 080508 Start >>
                         CheckWhseLines.Reset;
                         CheckWhseLines.SetRange(CheckWhseLines."No.", Rec."No.");
-                        if CheckWhseLines.FindFirst then repeat if Location.Get(CheckWhseLines."Location Code")then;
+                        if CheckWhseLines.FindFirst then
+                            repeat
+                                if Location.Get(CheckWhseLines."Location Code") then;
                                 if Location."Bin Mandatory" = true then begin
                                     BinContent.SetRange("Item No.", CheckWhseLines."Item No.");
                                     BinContent.SetRange("Location Code", CheckWhseLines."Location Code");
@@ -431,21 +440,21 @@ Page 50095 "Material Receipt Note"
                                 end;
                             until CheckWhseLines.Next = 0;
                         //ALLEAA CML-033 080508 End <<
-                        CheckYesNo:=CurrPage.WhseReceiptLines.Page.CheckScrap(Rec);
-                        SubconMRN:=Rec."Subcontracting Transfer Order";
+                        CheckYesNo := CurrPage.WhseReceiptLines.Page.CheckScrap(Rec);
+                        SubconMRN := Rec."Subcontracting Transfer Order";
                         if SubconMRN then //ALLEAA CML-033 050508
- CopyWhseLines(Rec); //ALLEAA CML-033 050508
+                            CopyWhseLines(Rec); //ALLEAA CML-033 050508
                         CurrPage.WhseReceiptLines.Page.WhsePostRcptYesNo;
                         if SubconMRN then //ALLEAA CML-033 050508
- PostSubconRejection; //ALLEAA CML-033 050508
+                            PostSubconRejection; //ALLEAA CML-033 050508
                         //>>CEN_AA001 26.04.07
                         if CheckYesNo then begin
-                            if Confirm('Do You want to update Scrap')then begin
+                            if Confirm('Do You want to update Scrap') then begin
                                 FrmScrap.CalulateScrap;
                                 FrmScrap.UpdateScrap();
                             end;
                         end;
-                    //<<CEN_AA001
+                        //<<CEN_AA001
                     end;
                 }
                 action("Post and &Print")
@@ -465,11 +474,13 @@ Page 50095 "Material Receipt Note"
                     begin
                         OnBeforeMaterialReceiptPost(Rec);
                         //CORP::PK 290619 >>>
-                        if Location.Get(Rec."Location Code")then;
+                        if Location.Get(Rec."Location Code") then;
                         WarehouseReceiptLine.Reset;
                         WarehouseReceiptLine.SetRange("No.", Rec."No.");
-                        if WarehouseReceiptLine.FindSet then repeat if Item.Get(WarehouseReceiptLine."Item No.")then;
-                                if(Location."Phy. Bin Required") and (Item."Phy. Bin Required")then begin
+                        if WarehouseReceiptLine.FindSet then
+                            repeat
+                                if Item.Get(WarehouseReceiptLine."Item No.") then;
+                                if (Location."Phy. Bin Required") and (Item."Phy. Bin Required") then begin
                                     ItemPhyBinDetails.Reset;
                                     ItemPhyBinDetails.SetRange("Document No.", WarehouseReceiptLine."No.");
                                     ItemPhyBinDetails.SetRange("Document Line No.", WarehouseReceiptLine."Line No.");
@@ -503,55 +514,59 @@ Page 50095 "Material Receipt Note"
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
         //CF001.01 St
-        Rec."Responsibility Center":=UserMgt.GetRespCenterFilter;
+        Rec."Responsibility Center" := UserMgt.GetRespCenterFilter;
     end;
+
     trigger OnOpenPage()
     begin
         //FindFirstAllowedRec(Rec);
         Rec.OpenWhseRcptHeader(Rec);
-    //
-    // //CF001.01 St
-    // if UserMgt.GetRespCenterFilter <> '' then begin
-    //     Rec.FilterGroup(2);
-    //     Rec.SetRange("Responsibility Center", UserMgt.GetRespCenterFilter);
-    //     Rec.FilterGroup(0);
-    // end;
-    //CF001.01 En
+        //
+        // //CF001.01 St
+        // if UserMgt.GetRespCenterFilter <> '' then begin
+        //     Rec.FilterGroup(2);
+        //     Rec.SetRange("Responsibility Center", UserMgt.GetRespCenterFilter);
+        //     Rec.FilterGroup(0);
+        // end;
+        //CF001.01 En
     end;
-    var WhseDocPrint: Codeunit "Warehouse Document-Print";
-    UserMgt: Codeunit "SSD User Setup Management";
-    Text001: label 'No Lines found for Quality Order Generation';
-    Text002: label '%1 nos. of Quality Order Generated ';
-    Text003: label 'Activate Quality Control Man. must be TRUE in Quality Setup ';
-    Text004: label 'Lot No Information not found for Order No %1 Line No %2';
-    Txt0005: label 'Normal Quality Order,Coil Type Quality Order';
-    TXT0006: label 'MRN is Blocked.';
-    TXT0007: label 'Please Define Posted MRN Series.';
-    ItemJnlLine: Record "Item Journal Line";
-    WhseLines: Record "Warehouse Receipt Line" temporary;
-    SubconMRN: Boolean;
-    BinContent: Record "Bin Content";
-    CheckWhseLines: Record "Warehouse Receipt Line";
-    Text50000: label 'Bin Contents does not exist for Item %1 , Location %2 and Bin %3.';
-    Location: Record Location;
-    UserSetup: Record "User Setup";
-    Text0008: label 'Item tracking lines are not defined for item no. %1.';
-    Text0009: label 'Do you want to create Quality Order?';
-    RecSourceType: Option Purchase, Manufacturing, , Calibration;
-    RecTemplateType: Option Receipt, Manufacturing, , Calibration;
-    ReservationEntry1: Record "Reservation Entry";
-    BarcodeReceipt: Report "BARCODE LEBEL RECEIPT 4x3";
-    ItemPhyBinDetails: Record "SSD Item Phy. Bin Details";
-    WarehouseReceiptLine: Record "Warehouse Receipt Line";
-    QRCodeDetail: Record "SSD QR Code Detail";
-    BarCodeNoInt: Integer;
-    I: Integer;
-    ReservationEntry: Record "Reservation Entry";
-    QRCodeMgt: Codeunit "QR Code Mgt.";
-    WarehouseEntry: Record "Warehouse Entry";
-    BinCode: Code[20];
-    Text0011: label 'QR Create successfully.';
-    Desc: Text;
+
+    var
+        WhseDocPrint: Codeunit "Warehouse Document-Print";
+        UserMgt: Codeunit "SSD User Setup Management";
+        Text001: label 'No Lines found for Quality Order Generation';
+        Text002: label '%1 nos. of Quality Order Generated ';
+        Text003: label 'Activate Quality Control Man. must be TRUE in Quality Setup ';
+        Text004: label 'Lot No Information not found for Order No %1 Line No %2';
+        Txt0005: label 'Normal Quality Order,Coil Type Quality Order';
+        TXT0006: label 'MRN is Blocked.';
+        TXT0007: label 'Please Define Posted MRN Series.';
+        ItemJnlLine: Record "Item Journal Line";
+        WhseLines: Record "Warehouse Receipt Line" temporary;
+        SubconMRN: Boolean;
+        BinContent: Record "Bin Content";
+        CheckWhseLines: Record "Warehouse Receipt Line";
+        Text50000: label 'Bin Contents does not exist for Item %1 , Location %2 and Bin %3.';
+        Location: Record Location;
+        UserSetup: Record "User Setup";
+        Text0008: label 'Item tracking lines are not defined for item no. %1.';
+        Text0009: label 'Do you want to create Quality Order?';
+        RecSourceType: Option Purchase,Manufacturing,,Calibration;
+        RecTemplateType: Option Receipt,Manufacturing,,Calibration;
+        ReservationEntry1: Record "Reservation Entry";
+        BarcodeReceipt: Report "BARCODE LEBEL RECEIPT 4x3";
+        ItemPhyBinDetails: Record "SSD Item Phy. Bin Details";
+        WarehouseReceiptLine: Record "Warehouse Receipt Line";
+        QRCodeDetail: Record "SSD QR Code Detail";
+        BarCodeNoInt: Integer;
+        I: Integer;
+        ReservationEntry: Record "Reservation Entry";
+        QRCodeMgt: Codeunit "QR Code Mgt.";
+        WarehouseEntry: Record "Warehouse Entry";
+        BinCode: Code[20];
+        Text0011: label 'QR Create successfully.';
+        Desc: Text;
+
     procedure CheckingForQualityComplete(RecWHRcvdHeader: Record "Warehouse Receipt Header")
     var
         WHRcvdLineLocal: Record "Warehouse Receipt Line";
@@ -561,16 +576,21 @@ Page 50095 "Material Receipt Note"
         WHRcvdLineLocal.SetRange("No.", RecWHRcvdHeader."No.");
         WHRcvdLineLocal.SetRange("Quality Required", true);
         WHRcvdLineLocal.SetFilter(WHRcvdLineLocal."Source Document", '<>%1', WHRcvdLineLocal."source document"::"Inbound Transfer");
-        if WHRcvdLineLocal.Find('-')then repeat WHRcvdLineLocal.TestField("Quality Done", true);
+        if WHRcvdLineLocal.Find('-') then
+            repeat
+                WHRcvdLineLocal.TestField("Quality Done", true);
             until WHRcvdLineLocal.Next = 0;
         WHRcvdLineLocal.Reset;
         WHRcvdLineLocal.SetRange("No.", RecWHRcvdHeader."No.");
         WHRcvdLineLocal.SetFilter("Rejected Qty.", '<>%1', 0);
-        if WHRcvdLineLocal.Find('-')then repeat WHRcvdLineLocal.TestField("Reject Location Code");
+        if WHRcvdLineLocal.Find('-') then
+            repeat
+                WHRcvdLineLocal.TestField("Reject Location Code");
                 LocationLocal.Get(WHRcvdLineLocal."Reject Location Code");
                 if LocationLocal."Bin Mandatory" then WHRcvdLineLocal.TestField("Reject Bin Code");
             until WHRcvdLineLocal.Next = 0;
     end;
+
     procedure UpdateSubContracRec(RecWHRcvdHeader: Record "Warehouse Receipt Header")
     var
         SubOrderCompListVend: Record "Sub Order Comp. List Vend";
@@ -581,14 +601,17 @@ Page 50095 "Material Receipt Note"
         if not RecWHRcvdHeader.Subcontracting then exit;
         WHRcvdLineLocal.Reset;
         WHRcvdLineLocal.SetRange("No.", RecWHRcvdHeader."No.");
-        if WHRcvdLineLocal.Find('-')then repeat SubOrderCompListVend.Reset;
+        if WHRcvdLineLocal.Find('-') then
+            repeat
+                SubOrderCompListVend.Reset;
                 SubOrderCompListVend.SetFilter("Document No.", WHRcvdLineLocal."Source No.");
                 SubOrderCompListVend.SetRange("Document Line No.", WHRcvdLineLocal."Source Line No.");
             //SubOrderCompListVend.UpdateReceiptQtyToRcvd(SubOrderCompListVend,WHRcvdLineLocal."Actual Qty. to Receive");
             //SubOrderCompListVend.UpdateReceiptDetails(SubOrderCompListVend,"Qty. to Reject (C.E.)","Qty. to Reject (V.E.)");
             until WHRcvdLineLocal.Next = 0;
-    //CF001.02 En
+        //CF001.02 En
     end;
+
     procedure PostSubconRejection()
     var
         WhseReceiptLineLocal: Record "Warehouse Receipt Line";
@@ -602,7 +625,9 @@ Page 50095 "Material Receipt Note"
         WhseLines.SetFilter("Rejected Qty.", '<>%1', 0);
         WhseLines.SetFilter("Reject Location Code", '<>%1', '');
         WhseLines.SetFilter("Reject Bin Code", '<>%1', '');
-        if WhseLines.FindFirst then repeat ILELocal.Reset;
+        if WhseLines.FindFirst then
+            repeat
+                ILELocal.Reset;
                 ILELocal.SetRange("Document No.", WhseLines."Source No.");
                 ILELocal.SetRange("Item No.", WhseLines."Item No.");
                 ILELocal.SetRange("Entry Type", ILELocal."entry type"::Transfer);
@@ -611,9 +636,10 @@ Page 50095 "Material Receipt Note"
                     InsertItemJnlLine(ILELocal, WhseLines."Source No.", WhseLines);
                 end;
             until WhseLines.Next = 0;
-    //END;
-    //ALLEAA CML-033 050508 End <<
+        //END;
+        //ALLEAA CML-033 050508 End <<
     end;
+
     procedure InsertItemJnlLine(ItemLedgEntry: Record "Item Ledger Entry"; DocNo: Code[20]; WhseLocalLine: Record "Warehouse Receipt Line")
     var
         DimItem: Record Item;
@@ -623,11 +649,11 @@ Page 50095 "Material Receipt Note"
         ItemJnlLine.Reset;
         ItemJnlLine.SetRange("Journal Template Name", 'SUBCON-BOM');
         ItemJnlLine.SetRange("Journal Batch Name", 'SUBCON-BOM');
-        if ItemJnlLine.Find('+')then LineNo:=ItemJnlLine."Line No.";
+        if ItemJnlLine.Find('+') then LineNo := ItemJnlLine."Line No.";
         ItemJnlLine.Init;
-        ItemJnlLine."Journal Template Name":='SUBCON-BOM';
-        ItemJnlLine."Journal Batch Name":='SUBCON-BOM';
-        LineNo+=10000;
+        ItemJnlLine."Journal Template Name" := 'SUBCON-BOM';
+        ItemJnlLine."Journal Batch Name" := 'SUBCON-BOM';
+        LineNo += 10000;
         ItemJnlLine.Validate("Line No.", LineNo);
         ItemJnlLine.Validate("Posting Date", WorkDate);
         ItemJnlLine.Validate("Document No.", DocNo);
@@ -640,16 +666,17 @@ Page 50095 "Material Receipt Note"
         ItemJnlLine.Validate(Quantity, WhseLocalLine."Rejected Qty.");
         ItemJnlLine.Validate(ItemJnlLine."Unit Amount", ItemLedgEntry."Cost Amount (Actual)" / ItemLedgEntry.Quantity);
         ItemJnlLine.Validate(ItemJnlLine."Applies-to Entry", ItemLedgEntry."Entry No.");
-        ItemJnlLine."SUBCON Consumption":=true;
+        ItemJnlLine."SUBCON Consumption" := true;
         DimItem.Get(ItemJnlLine."Item No.");
         ItemJnlLine.Validate("Shortcut Dimension 1 Code", DimItem."Global Dimension 1 Code");
         ItemJnlLine.Validate("Shortcut Dimension 2 Code", DimItem."Global Dimension 2 Code");
-        ItemJnlLine."Shortcut Dimension 1 Code":=DimItem."Global Dimension 1 Code";
-        ItemJnlLine."Shortcut Dimension 2 Code":=DimItem."Global Dimension 2 Code";
+        ItemJnlLine."Shortcut Dimension 1 Code" := DimItem."Global Dimension 1 Code";
+        ItemJnlLine."Shortcut Dimension 2 Code" := DimItem."Global Dimension 2 Code";
         ItemJnlLine.Insert;
         Codeunit.Run(Codeunit::"Item Jnl.-Post", ItemJnlLine);
-    //ALLEAA CML-033 050508 End <<
+        //ALLEAA CML-033 050508 End <<
     end;
+
     procedure CopyWhseLines(WhseHeader: Record "Warehouse Receipt Header")
     var
         WhseRcptLnLocal: Record "Warehouse Receipt Line";
@@ -662,33 +689,42 @@ Page 50095 "Material Receipt Note"
             WhseRcptLnLocal.SetFilter("Rejected Qty.", '<>%1', 0);
             WhseRcptLnLocal.SetFilter("Reject Location Code", '<>%1', '');
             WhseRcptLnLocal.SetFilter("Reject Bin Code", '<>%1', '');
-            if WhseRcptLnLocal.FindFirst then repeat WhseLines.Init;
+            if WhseRcptLnLocal.FindFirst then
+                repeat
+                    WhseLines.Init;
                     WhseLines.TransferFields(WhseRcptLnLocal);
                     WhseLines.Insert;
                 until WhseRcptLnLocal.Next = 0;
         end;
     end;
+
     local procedure SortingMethodOnAfterValidate()
     begin
         CurrPage.Update;
     end;
-    local procedure OnValidateWorkOrderNo(OrderNo: Code[20])TotalAmt: Decimal var
+
+    local procedure OnValidateWorkOrderNo(OrderNo: Code[20]) TotalAmt: Decimal
+    var
         PurchLine: Record "Purchase Line";
     begin
         //ALLE-AT >>
-        TotalAmt:=0;
+        TotalAmt := 0;
         PurchLine.Reset();
         PurchLine.SetRange("Document No.", OrderNo);
         PurchLine.SetRange("Document Type", PurchLine."document type"::Order);
-        if PurchLine.FindSet then repeat TotalAmt+=PurchLine.Amount;
+        if PurchLine.FindSet then
+            repeat
+                TotalAmt += PurchLine.Amount;
             until PurchLine.Next = 0;
         exit(TotalAmt);
-    //ALLE-AT <<
+        //ALLE-AT <<
     end;
+
     [IntegrationEvent(false, false)]
     local procedure OnBeforeCreateQualityOrder(var WarehouseReceiptHeader: Record "Warehouse Receipt Header"; var IsHandled: Boolean)
     begin
     end;
+
     [IntegrationEvent(false, false)]
     local procedure OnBeforeMaterialReceiptPost(var WarehouseReceiptHeader: Record "Warehouse Receipt Header")
     begin
