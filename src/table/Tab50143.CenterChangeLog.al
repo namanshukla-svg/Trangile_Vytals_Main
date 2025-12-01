@@ -9,11 +9,12 @@ table 50143 "Center Change Log"
     {
         field(1; "Entry No."; Integer)
         {
-            AutoIncrement = true;
+            DataClassification = ToBeClassified;
         }
         field(2; "Center Type"; Enum "Center Type Enum")
         {
             Caption = 'Center Type';
+            DataClassification = ToBeClassified;
         }
         field(3; "Center No."; Code[20])
         {
@@ -21,22 +22,27 @@ table 50143 "Center Change Log"
             TableRelation = if ("Center Type" = const("Work Center")) "Work Center"
             else
             if ("Center Type" = const("Machine Center")) "Machine Center";
+            DataClassification = ToBeClassified;
         }
         field(4; "Center Name"; Text[100])
         {
             Caption = 'Center Name';
+            DataClassification = ToBeClassified;
         }
         field(5; Action; Enum "Center Block Action Enum")
         {
             Caption = 'Action';
+            DataClassification = ToBeClassified;
         }
         field(6; "Effective Date-Time"; DateTime)
         {
             Caption = 'Effective Date-Time';
+            DataClassification = ToBeClassified;
         }
         field(7; "Changed By"; Code[50])
         {
             Caption = 'Changed By';
+            DataClassification = ToBeClassified;
         }
     }
 
